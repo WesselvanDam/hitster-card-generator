@@ -116,7 +116,7 @@ To use this project, you need:
 - The back sides of all cards are identical to prevent players from identifying the card type before flipping it.
 - Tokens are included in the PDF and are made using the `assets/token.png` image.
 
-<img src="assets/token.png" alt="Example Token" style="max-width: 300px;">
+<img src="assets/token.png" alt="Example Token" width="300px">
 
 ## Contributing
 
