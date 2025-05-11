@@ -2,6 +2,8 @@
 
 This Python project allows you to create printable cards and tokens for a game similar to the music guessing game **Hitster**. The generated PDF contains double-sided cards and tokens that can be printed, cut out, and used for gameplay.
 
+If anything is unclear, please feel free to [open an issue](https://github.com/WesselvanDam/hitster-card-generator/issues) or [contact me](mailto:wessel@wesselvandam.nl) directly. I will do my best to help you out!
+
 ## Features
 
 - Generate a PDF with cards based on data from a CSV file.
@@ -39,6 +41,10 @@ Note that the QR code on the top right corner of the page on the right correspon
 
 ## Getting Started
 
+If you are not familiar with Python or Git, you might want to check out [this Google Colab notebook](https://colab.research.google.com/drive/1wJosGkdxvzGYWLykdSODbbToHJt-_Z4P?usp=sharing) that provides a step-by-step guide to generating your own cards and tokens. The notebook includes instructions on how to upload your CSV file and run the code without needing to install anything on your local machine.
+
+If you prefer to run the code locally, follow the instructions below.
+
 ### Prerequisites
 
 To use this project, you need:
@@ -54,7 +60,7 @@ To use this project, you need:
    ```bash
    python -m venv env
    ```
-4. Activate the virtual environment:
+4. Activate the virtual environment (skip this step if you didn't create one):
    - On Windows:
      ```bash
      .\env\Scripts\Activate.ps1
@@ -87,7 +93,7 @@ To use this project, you need:
 
    - Open the `src/config.py` file to adjust settings such as:
      - Page and card sizes.
-     - Colors for the front and back sides of the cards. The front side can be customized based on the type of card.
+     - Colors for the front and back sides of the cards. The front side can be customized based on the type of card. Colors are given in RGB format (0-255).
    - Note: Not all sizes are possible to ensure proper alignment for double-sided printing.
 
 3. **Generate the PDF**
@@ -108,9 +114,7 @@ To use this project, you need:
 - The back sides of all cards are identical to prevent players from identifying the card type before flipping it.
 - Tokens are included in the PDF and are made using the `assets/token.png` image.
 
-## Example Output
-
-![Example Token](assets/token.png)
+<img src="assets/token.png" alt="Example Token" style="max-width: 300px;">
 
 ## Contributing
 
