@@ -88,6 +88,8 @@ To use this project, you need:
      painting;https://example.com;Artist Name;Painting Title;Year
      ```
    - The `type` column determines the type of card (e.g., `song`, `video`, `article`, `painting`).
+   - The `url` column contains the URL for the QR code. This can be any valid URL, such as a Spotify link, YouTube link, or a webpage link. For example, I used Google Drive links to images that I had uploaded to my Google Drive. Please ensure that the links are publicly accessible and long-lived, so that your cards will work for a long time.
+    - The `top`, `bottom`, and `center` columns contain the text that will be displayed on the front side of the card. The `top` and `bottom` columns are used for the top and bottom text, while the `center` column is used for the center text (typically a year). You can use any text you like, but make sure to keep it short enough to fit on the card.
 
 2. **Customize Configuration**
 
