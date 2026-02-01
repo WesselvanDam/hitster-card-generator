@@ -62,52 +62,51 @@ def generate_card_type_colors(card_types):
     """Generate color pickers for each unique card type found in the CSV."""
     container = document.getElementById("dynamic-card-types")
     container.innerHTML = ""  # Clear existing color pickers
-    
+
     # Hide the "no CSV" message
     no_csv_msg = document.getElementById("no-csv-message")
     if no_csv_msg:
         no_csv_msg.classList.add("hidden")
-    
+
     # Generate color picker for each card type
     for card_type in sorted(card_types):
         # Get default colors or generate random ones
-        default_colors = DEFAULT_COLORS.get(card_type, {
-            "bg": "#cccccc",
-            "text": "#000000"
-        })
-        
+        default_colors = DEFAULT_COLORS.get(
+            card_type, {"bg": "#cccccc", "text": "#000000"}
+        )
+
         # Create the HTML structure for background color
         bg_div = document.createElement("div")
-        
+
         bg_label = document.createElement("span")
         bg_label.className = "font-medium text-slate-700 dark:text-slate-300"
         bg_label.textContent = f"{card_type.capitalize()} BG"
         bg_div.appendChild(bg_label)
-        
+
         bg_input = document.createElement("input")
         bg_input.type = "color"
         bg_input.className = "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
         bg_input.id = f"{card_type}-bg"
         bg_input.value = default_colors["bg"]
         bg_div.appendChild(bg_input)
-        
+
         container.appendChild(bg_div)
-        
+
         # Create the HTML structure for text color
         text_div = document.createElement("div")
-        
+
         text_label = document.createElement("span")
         text_label.className = "font-medium text-slate-700 dark:text-slate-300"
         text_label.textContent = f"{card_type.capitalize()} Text"
         text_div.appendChild(text_label)
-        
+
         text_input = document.createElement("input")
         text_input.type = "color"
         text_input.className = "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
         text_input.id = f"{card_type}-text"
         text_input.value = default_colors["text"]
         text_div.appendChild(text_input)
-        
+
         container.appendChild(text_div)
 
 
@@ -141,8 +140,8 @@ def validate_csv_data(data):
 
 def validate_config(config):
     """Validate that the configuration is valid."""
-    PAPER_WIDTH = 210
-    PAPER_HEIGHT = 297
+    PAPER_WIDTH = config["PAPER_WIDTH"]
+    PAPER_HEIGHT = config["PAPER_HEIGHT"]
 
     # Check if all values are positive
     for key, value in config.items():
@@ -159,7 +158,7 @@ def validate_config(config):
     if (PAPER_WIDTH - 2 * card_margin + gap) % (card_size + gap) != 0:
         return (
             False,
-            f"Invalid card configuration: the card size ({card_size}mm) and gap ({gap}mm) should fit perfectly in the width of the page (210mm), minus the margin ({card_margin}mm). Please adjust these values.",
+            f"Invalid card configuration: the card size ({card_size}mm) and gap ({gap}mm) should fit perfectly in the width of the page ({PAPER_WIDTH}mm), minus the margin ({card_margin}mm). Please adjust these values.",
         )
 
     # Check token configuration
@@ -170,7 +169,7 @@ def validate_config(config):
     if (PAPER_WIDTH - 2 * token_margin + token_gap) % (token_size + token_gap) != 0:
         return (
             False,
-            f"Invalid token configuration: the token size ({token_size}mm) and gap ({token_gap}mm) should fit perfectly in the width of the page (210mm), minus the margin ({token_margin}mm). Please adjust these values.",
+            f"Invalid token configuration: the token size ({token_size}mm) and gap ({token_gap}mm) should fit perfectly in the width of the page ({PAPER_WIDTH}mm), minus the margin ({token_margin}mm). Please adjust these values.",
         )
 
     return True, "Configuration is valid"
@@ -204,7 +203,7 @@ async def load_csv_file(event):
 
         # Get unique card types (excluding 'back' if present)
         unique_types = [t for t in csv_data["type"].unique() if t != "back"]
-        
+
         # Generate color pickers for each type
         generate_card_type_colors(unique_types)
 
@@ -282,8 +281,8 @@ def create_card_back(record, pdf, config):
 
 def create_pdf_bytes(data, config):
     """Creates a PDF with the data from the DataFrame and returns it as bytes."""
-    PAPER_WIDTH = 210
-    PAPER_HEIGHT = 297
+    PAPER_WIDTH = config["PAPER_WIDTH"]
+    PAPER_HEIGHT = config["PAPER_HEIGHT"]
     BLEED = config["BLEED"]
     CARD_SIZE = config["CARD_SIZE"]
     GAP = config["GAP"]
@@ -357,6 +356,8 @@ def collect_config():
     config = {}
 
     # Numeric configuration
+    config["PAPER_WIDTH"] = float(document.getElementById("paper-width").value)
+    config["PAPER_HEIGHT"] = float(document.getElementById("paper-height").value)
     config["BLEED"] = float(document.getElementById("bleed").value)
     config["CARD_SIZE"] = float(document.getElementById("card-size").value)
     config["GAP"] = float(document.getElementById("gap").value)

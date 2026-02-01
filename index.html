@@ -127,9 +127,9 @@
           </h1>
           <div class="space-y-3">
             <p class="text-lg text-slate-600 dark:text-slate-400">
-              Turn CSV data into professional, print-ready PDF cards.
-              Perfect for Hitster-style games, using your own music,
-              photos, videos, or any content you like.
+              Turn CSV data into professional, print-ready PDF cards. Perfect
+              for Hitster-style games, using your own music, photos, videos, or
+              any content you like.
             </p>
             <a
               class="inline-flex items-center text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
@@ -165,98 +165,108 @@
       </section>
 
       <details
-            class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <summary
-              class="flex items-center justify-between p-8 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-              <div
-                class="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
-                <i class="ph ph-info text-primary"></i>
-                CSV Format Guide
-              </div>
-              <i
-                class="ph ph-caret-down group-open:rotate-180 transition-transform"></i>
-            </summary>
-            <div
-              class="p-8 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700 text-base">
-              <p class="'font-medium">This tool requires you to upload a CSV file containing the data that you want to turn into cards. While some websites allow you to link to a Spotify playlist, those may not get the song metadata correctly. Using a CSV, you have full control over the data and can customize it as needed.</p>
-              <p class="font-medium my-2">Required Columns:</p>
-              <ul
-                class="list-disc space-y-1 text-slate-600 dark:text-slate-400 ml-2 pl-8">
-                <li
-                  ><code
-                    class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
-                    >type</code
-                  >: Category (e.g., song, painting). Cards within each category can get their own color on the 'front' of the card (the side <strong>without</strong> the QR code).</li
-                >
-                <li
-                  ><code
-                    class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
-                    >url</code
-                  >: Valid URL for QR code. For example, a Spotify link or a link to an image (make sure the link is publicly accessible).</li
-                >
-                <li
-                  ><code
-                    class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
-                    >top</code
-                  >,
-                  <code
-                    class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
-                    >center</code
-                  >,
-                  <code
-                    class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
-                    >bottom</code
-                  >: Text content fields. In the official Hitster game, these contain the song title, year, and artist respectively.</li
-                >
-              </ul>
-              <p class="font-medium mt-4 mb-2">Example CSV:</p>
-              <div class="overflow-x-auto">
-                <table
-                  class="min-w-full text-xs border border-slate-300 dark:border-slate-600 rounded">
-                  <thead class="bg-slate-100 dark:bg-slate-800">
-                    <tr>
-                      <th
-                        class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
-                        >type</th
-                      >
-                      <th
-                        class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
-                        >url</th
-                      >
-                      <th
-                        class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
-                        >top</th
-                      >
-                      <th
-                        class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
-                        >center</th
-                      >
-                      <th
-                        class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
-                        >bottom</th
-                      >
-                    </tr>
-                  </thead>
-                  <tbody class="text-slate-600 dark:text-slate-400">
-                    <tr class="border-b border-slate-200 dark:border-slate-700">
-                      <td class="px-3 py-2">song</td>
-                      <td class="px-3 py-2">https://youtu.be/example1</td>
-                      <td class="px-3 py-2">Song Title</td>
-                      <td class="px-3 py-2">1985</td>
-                      <td class="px-3 py-2">Artist Name</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2">painting</td>
-                      <td class="px-3 py-2">https://example.com/art.jpg</td>
-                      <td class="px-3 py-2">Starry Night</td>
-                      <td class="px-3 py-2">1889</td>
-                      <td class="px-3 py-2">Van Gogh</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </details>
+        class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <summary
+          class="flex items-center justify-between p-8 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+          <div
+            class="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
+            <i class="ph ph-info text-primary"></i>
+            CSV Format Guide
+          </div>
+          <i
+            class="ph ph-caret-down group-open:rotate-180 transition-transform"></i>
+        </summary>
+        <div
+          class="p-8 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700 text-base">
+          <p class="'font-medium"
+            >This tool requires you to upload a CSV file containing the data
+            that you want to turn into cards. While some websites allow you to
+            link to a Spotify playlist, those may not get the song metadata
+            correctly. Using a CSV, you have full control over the data and can
+            customize it as needed.</p
+          >
+          <p class="font-medium my-2">Required Columns:</p>
+          <ul
+            class="list-disc space-y-1 text-slate-600 dark:text-slate-400 ml-2 pl-8">
+            <li
+              ><code
+                class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
+                >type</code
+              >: Category (e.g., song, painting). Cards within each category can
+              get their own color on the 'front' of the card (the side
+              <strong>without</strong> the QR code).</li
+            >
+            <li
+              ><code
+                class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
+                >url</code
+              >: Valid URL for QR code. For example, a Spotify link or a link to
+              an image (make sure the link is publicly accessible).</li
+            >
+            <li
+              ><code
+                class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
+                >top</code
+              >,
+              <code
+                class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
+                >center</code
+              >,
+              <code
+                class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
+                >bottom</code
+              >: Text content fields. In the official Hitster game, these
+              contain the song title, year, and artist respectively.</li
+            >
+          </ul>
+          <p class="font-medium mt-4 mb-2">Example CSV:</p>
+          <div class="overflow-x-auto">
+            <table
+              class="min-w-full text-xs border border-slate-300 dark:border-slate-600 rounded">
+              <thead class="bg-slate-100 dark:bg-slate-800">
+                <tr>
+                  <th
+                    class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
+                    >type</th
+                  >
+                  <th
+                    class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
+                    >url</th
+                  >
+                  <th
+                    class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
+                    >top</th
+                  >
+                  <th
+                    class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
+                    >center</th
+                  >
+                  <th
+                    class="px-3 py-2 text-left font-semibold border-b border-slate-300 dark:border-slate-600"
+                    >bottom</th
+                  >
+                </tr>
+              </thead>
+              <tbody class="text-slate-600 dark:text-slate-400">
+                <tr class="border-b border-slate-200 dark:border-slate-700">
+                  <td class="px-3 py-2">song</td>
+                  <td class="px-3 py-2">https://youtu.be/example1</td>
+                  <td class="px-3 py-2">Song Title</td>
+                  <td class="px-3 py-2">1985</td>
+                  <td class="px-3 py-2">Artist Name</td>
+                </tr>
+                <tr>
+                  <td class="px-3 py-2">painting</td>
+                  <td class="px-3 py-2">https://example.com/art.jpg</td>
+                  <td class="px-3 py-2">Starry Night</td>
+                  <td class="px-3 py-2">1889</td>
+                  <td class="px-3 py-2">Van Gogh</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
 
       <!-- Messages -->
       <div
@@ -286,27 +296,27 @@
             class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group relative">
             <div class="space-y-2 text-center">
               <div
-                class="mx-auto h-12 w-12 text-slate-400 group-hover:text-primary transition-colors">
+                class="mx-auto h-12 w-12 text-slate-400 group-hover:text-primary transition-colors pointer-events-none">
                 <i class="ph ph-upload-simple text-4xl"></i>
               </div>
               <div
-                class="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
+                class="flex text-sm text-slate-600 dark:text-slate-400 justify-center pointer-events-none">
                 <label
-                  class="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary"
-                  for="csv-file">
+                  class="relative rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
                   <span>Upload a CSV file</span>
-                  <input
-                    class="sr-only"
-                    id="csv-file"
-                    type="file"
-                    accept=".csv" />
                 </label>
                 <p class="pl-1">or drag and drop</p>
               </div>
-              <p class="text-xs text-slate-500 dark:text-slate-500">
+              <p
+                class="text-xs text-slate-500 dark:text-slate-500 pointer-events-none">
                 CSV up to 10MB
               </p>
             </div>
+            <input
+              class="absolute inset-0 w-full h-full cursor-pointer opacity-0"
+              id="csv-file"
+              type="file"
+              accept=".csv" />
           </div>
         </div>
       </section>
@@ -329,7 +339,7 @@
             <div class="space-y-4">
               <h3
                 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-                >Back Card (QR Code)</h3
+                >Back Side (QR Code)</h3
               >
               <div
                 class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl space-y-4 border border-slate-100 dark:border-slate-700">
@@ -349,7 +359,7 @@
                   <label
                     for="back-text"
                     class="text-slate-700 dark:text-slate-300 font-medium"
-                    >Text Color</label
+                    >QR Color</label
                   >
                   <input
                     class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
@@ -363,7 +373,7 @@
             <div class="space-y-4">
               <h3
                 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-                >Detected Categories</h3
+                >Front Side (Per Card Type)</h3
               >
               <div
                 id="dynamic-card-types"
@@ -408,6 +418,38 @@
             class="px-6 md:px-8 pb-8 pt-0 border-t border-slate-100 dark:border-slate-700/50">
             <div
               class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              <div class="space-y-1">
+                <label
+                  for="paper-width"
+                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >Paper Width (mm)</label
+                >
+                <div class="relative rounded-md shadow-sm">
+                  <input
+                    class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
+                    id="paper-width"
+                    type="number"
+                    value="210"
+                    min="1"
+                    step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label
+                  for="paper-height"
+                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                  >Paper Height (mm)</label
+                >
+                <div class="relative rounded-md shadow-sm">
+                  <input
+                    class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
+                    id="paper-height"
+                    type="number"
+                    value="297"
+                    min="1"
+                    step="0.1" />
+                </div>
+              </div>
               <div class="space-y-1">
                 <label
                   for="bleed"

@@ -7,7 +7,3 @@ packages = [
     "qrcode",
     "pillow"
 ]
-
-[files]
-"./src/config.py" = "./src/config.py"
-"./src/pdf.py" = "./src/pdf.py"
