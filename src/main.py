@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from src.pdf import create_pdf
+from .pdf import create_pdf
 
 
 def main():
