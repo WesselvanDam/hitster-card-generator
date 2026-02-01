@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card PDF Generator</title>
+    <link
+      rel="stylesheet"
+      href="https://pyscript.net/releases/2026.1.1/core.css" />
+    <script
+      type="module"
+      src="https://pyscript.net/releases/2026.1.1/core.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .container {
+        display: grid;
+        gap: 20px;
+      }
+      .section {
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 5px;
+      }
+      .section h2 {
+        margin-top: 0;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group input[type="number"],
+      .form-group input[type="color"],
+      .form-group input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+      .form-group input[type="color"] {
+        height: 40px;
+      }
+      .color-input-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .card-type-colors {
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      #error-message {
+        color: #d32f2f;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #ffebee;
+        margin: 10px 0;
+        display: none;
+      }
+      #success-message {
+        color: #388e3c;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #e8f5e9;
+        margin: 10px 0;
+        display: none;
+      }
+      #status {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+      }
+      .instructions {
+        background-color: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      .instructions h3 {
+        margin-top: 0;
+      }
+      .instructions ul {
+        margin: 10px 0;
+        padding-left: 20px;
+      }
+      .instructions code {
+        background-color: #fff;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Card PDF Generator</h1>
+
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <p><strong>CSV File Format Requirements:</strong></p>
+      <ul>
+        <li>File must be in CSV format (comma or semicolon separated)</li>
+        <li
+          >Required columns: <code>type</code>, <code>url</code>,
+          <code>top</code>, <code>center</code>, <code>bottom</code></li
+        >
+        <li
+          ><code>type</code> can be any text value (e.g., song, video, article,
+          painting, etc.)</li
+        >
+        <li><code>url</code> must be a valid URL</li>
+        <li
+          ><code>top</code>, <code>center</code>, and <code>bottom</code> are
+          text fields for card content</li
+        >
+        <li><code>center</code> can be empty for cards without center text</li>
+      </ul>
+      <p><strong>How to use:</strong></p>
+      <ol>
+        <li>Upload your CSV file</li>
+        <li>Configure colors for each card type found in your CSV</li>
+        <li>Adjust other configuration parameters if needed (optional)</li>
+        <li>Click "Generate PDF" to create your cards</li>
+      </ol>
+    </div>
+
+    <div id="error-message"></div>
+    <div id="success-message"></div>
+    <div id="status"></div>
+
+    <div class="container">
+      <div class="section">
+        <h2>1. Upload CSV File</h2>
+        <div class="form-group">
+          <label for="csv-file">Select CSV File:</label>
+          <input type="file" id="csv-file" accept=".csv" />
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>2. Configure Card Settings</h2>
+
+        <div class="form-group">
+          <label for="bleed">Bleed (mm):</label>
+          <input type="number" id="bleed" value="3" min="0" step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="card-size">Card Size (mm):</label>
+          <input type="number" id="card-size" value="66" min="1" step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="gap">Card Gap (mm):</label>
+          <input type="number" id="gap" value="3" min="0.1" step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="card-margin">Card Margin (mm):</label>
+          <input
+            type="number"
+            id="card-margin"
+            value="3"
+            min="0.1"
+            step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="token-size">Token Size (mm):</label>
+          <input type="number" id="token-size" value="28" min="1" step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="token-gap">Token Gap (mm):</label>
+          <input type="number" id="token-gap" value="6" min="0.1" step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="token-margin">Token Margin (mm):</label>
+          <input
+            type="number"
+            id="token-margin"
+            value="6"
+            min="0.1"
+            step="0.1" />
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>3. Configure Card Colors</h2>
+
+        <div class="card-type-colors">
+          <h4>Back Card (QR Code)</h4>
+          <div class="color-input-group">
+            <div class="form-group">
+              <label for="back-bg">Background Color:</label>
+              <input type="color" id="back-bg" value="#acc8e5" />
+            </div>
+            <div class="form-group">
+              <label for="back-text">Text Color:</label>
+              <input type="color" id="back-text" value="#112a46" />
+            </div>
+          </div>
+        </div>
+
+        <div id="dynamic-card-types">
+          <!-- Dynamic card type color pickers will be inserted here after CSV upload -->
+        </div>
+
+        <p
+          id="no-csv-message"
+          style="color: #666; font-style: italic; margin-top: 10px">
+          Upload a CSV file to configure colors for card types found in your
+          data.
+        </p>
+      </div>
+
+      <div class="section">
+        <h2>4. Generate PDF</h2>
+        <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
+      </div>
+    </div>
+
+    <script
+      type="py"
+      src="./web_pdf_generator.py"
+      config="./pyscript.toml"></script>
+  </body>
+</html>
