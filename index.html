@@ -4,6 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Card PDF Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0d9488",
+                        "primary-hover": "#0f766e",
+                        "background-light": "#f1f5f9",
+                        "background-dark": "#0f172a",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+    </script>
     <link
       rel="stylesheet"
       href="https://pyscript.net/releases/2026.1.1/core.css" />
@@ -11,240 +40,318 @@
       type="module"
       src="https://pyscript.net/releases/2026.1.1/core.js"></script>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
+      ::-webkit-scrollbar {
+        width: 8px;
       }
-      .container {
-        display: grid;
-        gap: 20px;
+      ::-webkit-scrollbar-track {
+        background: transparent;
       }
-      .section {
-        border: 1px solid #ccc;
-        padding: 15px;
-        border-radius: 5px;
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
       }
-      .section h2 {
-        margin-top: 0;
+      .dark ::-webkit-scrollbar-thumb {
+        background: #475569;
       }
-      .form-group {
-        margin-bottom: 15px;
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
       }
-      .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-      .form-group input[type="number"],
-      .form-group input[type="color"],
-      .form-group input[type="file"] {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-      }
-      .form-group input[type="color"] {
-        height: 40px;
-      }
-      .color-input-group {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-      .card-type-colors {
-        margin-bottom: 15px;
-        padding: 10px;
-        background-color: #f5f5f5;
-        border-radius: 5px;
-      }
-      button {
-        background-color: #4caf50;
-        color: white;
-        padding: 12px 24px;
+      input[type="color"] {
+        -webkit-appearance: none;
         border: none;
-        border-radius: 4px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+        padding: 0;
         cursor: pointer;
-        font-size: 16px;
       }
-      button:hover {
-        background-color: #45a049;
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
       }
-      button:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
-      }
-      #error-message {
-        color: #d32f2f;
-        padding: 10px;
-        border-radius: 4px;
-        background-color: #ffebee;
-        margin: 10px 0;
-        display: none;
-      }
-      #success-message {
-        color: #388e3c;
-        padding: 10px;
-        border-radius: 4px;
-        background-color: #e8f5e9;
-        margin: 10px 0;
-        display: none;
-      }
-      #status {
-        margin: 10px 0;
-        padding: 10px;
-        background-color: #f5f5f5;
-        border-radius: 4px;
-      }
-      .instructions {
-        background-color: #e3f2fd;
-        padding: 15px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-      }
-      .instructions h3 {
-        margin-top: 0;
-      }
-      .instructions ul {
-        margin: 10px 0;
-        padding-left: 20px;
-      }
-      .instructions code {
-        background-color: #fff;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-family: monospace;
+      input[type="color"]::-webkit-color-swatch {
+        border: none;
       }
     </style>
   </head>
-  <body>
-    <h1>Card PDF Generator</h1>
-
-    <div class="instructions">
-      <h3>Instructions</h3>
-      <p><strong>CSV File Format Requirements:</strong></p>
-      <ul>
-        <li>File must be in CSV format (comma or semicolon separated)</li>
-        <li
-          >Required columns: <code>type</code>, <code>url</code>,
-          <code>top</code>, <code>center</code>, <code>bottom</code></li
-        >
-        <li
-          ><code>type</code> can be any text value (e.g., song, video, article,
-          painting, etc.)</li
-        >
-        <li><code>url</code> must be a valid URL</li>
-        <li
-          ><code>top</code>, <code>center</code>, and <code>bottom</code> are
-          text fields for card content</li
-        >
-        <li><code>center</code> can be empty for cards without center text</li>
-      </ul>
-      <p><strong>How to use:</strong></p>
-      <ol>
-        <li>Upload your CSV file</li>
-        <li>Configure colors for each card type found in your CSV</li>
-        <li>Adjust other configuration parameters if needed (optional)</li>
-        <li>Click "Generate PDF" to create your cards</li>
-      </ol>
-    </div>
-
-    <div id="error-message"></div>
-    <div id="success-message"></div>
-    <div id="status"></div>
-
-    <div class="container">
-      <div class="section">
-        <h2>1. Upload CSV File</h2>
-        <div class="form-group">
-          <label for="csv-file">Select CSV File:</label>
-          <input type="file" id="csv-file" accept=".csv" />
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>2. Configure Card Settings</h2>
-
-        <div class="form-group">
-          <label for="bleed">Bleed (mm):</label>
-          <input type="number" id="bleed" value="3" min="0" step="0.1" />
-        </div>
-
-        <div class="form-group">
-          <label for="card-size">Card Size (mm):</label>
-          <input type="number" id="card-size" value="66" min="1" step="0.1" />
-        </div>
-
-        <div class="form-group">
-          <label for="gap">Card Gap (mm):</label>
-          <input type="number" id="gap" value="3" min="0.1" step="0.1" />
-        </div>
-
-        <div class="form-group">
-          <label for="card-margin">Card Margin (mm):</label>
-          <input
-            type="number"
-            id="card-margin"
-            value="3"
-            min="0.1"
-            step="0.1" />
-        </div>
-
-        <div class="form-group">
-          <label for="token-size">Token Size (mm):</label>
-          <input type="number" id="token-size" value="28" min="1" step="0.1" />
-        </div>
-
-        <div class="form-group">
-          <label for="token-gap">Token Gap (mm):</label>
-          <input type="number" id="token-gap" value="6" min="0.1" step="0.1" />
-        </div>
-
-        <div class="form-group">
-          <label for="token-margin">Token Margin (mm):</label>
-          <input
-            type="number"
-            id="token-margin"
-            value="6"
-            min="0.1"
-            step="0.1" />
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>3. Configure Card Colors</h2>
-
-        <div class="card-type-colors">
-          <h4>Back Card (QR Code)</h4>
-          <div class="color-input-group">
-            <div class="form-group">
-              <label for="back-bg">Background Color:</label>
-              <input type="color" id="back-bg" value="#acc8e5" />
+  <body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-body transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-3">
+            <div class="bg-primary text-white p-2 rounded-lg">
+              <i class="ph ph-cards text-xl"></i>
             </div>
-            <div class="form-group">
-              <label for="back-text">Text Color:</label>
-              <input type="color" id="back-text" value="#112a46" />
+            <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">CardGen Pro</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+              <i class="ph ph-moon dark:hidden text-xl"></i>
+              <i class="ph ph-sun hidden dark:block text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <!-- Hero Section -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start fade-in">
+        <div class="space-y-6">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight">
+            Create Custom Hitster Cards <span class="text-primary">Instantly</span>
+          </h1>
+          <div class="space-y-3">
+            <p class="text-lg text-slate-600 dark:text-slate-400">
+              Turn your CSV data into professional, print-ready PDF cards. Perfect for Hitster-style music games, trivia decks, and flashcards.
+            </p>
+            <a class="inline-flex items-center text-sm font-semibold text-primary hover:text-primary-hover transition-colors" href="#inspiration">
+              Need inspiration? See what else you can create
+              <i class="ph ph-arrow-down ml-1.5"></i>
+            </a>
+          </div>
+          <details class="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+              <div class="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
+                <i class="ph ph-info text-primary"></i>
+                CSV Format Guide
+              </div>
+              <i class="ph ph-caret-down group-open:rotate-180 transition-transform"></i>
+            </summary>
+            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700 text-sm">
+              <p class="font-medium mb-2">Required Columns:</p>
+              <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 ml-2">
+                <li><code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs">type</code>: Category (e.g., song, painting)</li>
+                <li><code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs">url</code>: Valid URL for QR code</li>
+                <li><code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs">top</code>, <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs">center</code>, <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs">bottom</code>: Text content fields</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+        <div class="relative group">
+          <div class="absolute -inset-1 bg-gradient-to-r from-teal-400 to-emerald-400 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+          <div class="relative bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-200 dark:border-slate-700">
+            <div class="relative w-40 h-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg rotate-[-6deg] flex flex-col items-center justify-center p-4">
+              <div class="w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
+                <i class="ph ph-qr-code text-4xl text-slate-400"></i>
+              </div>
+              <div class="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded mb-1"></div>
+              <div class="w-2/3 h-2 bg-slate-100 dark:bg-slate-700 rounded"></div>
+            </div>
+            <div class="absolute w-40 h-56 bg-primary rounded-lg shadow-2xl rotate-[6deg] flex flex-col items-center justify-center p-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <i class="ph ph-music-notes text-white text-5xl opacity-80"></i>
+              <p class="text-white font-bold mt-4">HITSTER</p>
             </div>
           </div>
         </div>
+      </section>
 
-        <div id="dynamic-card-types">
-          <!-- Dynamic card type color pickers will be inserted here after CSV upload -->
+      <!-- Messages -->
+      <div id="error-message" class="hidden p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300"></div>
+      <div id="success-message" class="hidden p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300"></div>
+      <div id="status" class="hidden p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"></div>
+
+      <!-- Upload Section -->
+      <section class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-4 mb-6">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">1</span>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Upload CSV File</h2>
+          </div>
+          <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group relative">
+            <div class="space-y-2 text-center">
+              <div class="mx-auto h-12 w-12 text-slate-400 group-hover:text-primary transition-colors">
+                <i class="ph ph-upload-simple text-4xl"></i>
+              </div>
+              <div class="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
+                <label class="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary" for="csv-file">
+                  <span>Upload a CSV file</span>
+                  <input class="sr-only" id="csv-file" type="file" accept=".csv" />
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-500">
+                CSV up to 10MB
+              </p>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <p
-          id="no-csv-message"
-          style="color: #666; font-style: italic; margin-top: 10px">
-          Upload a CSV file to configure colors for card types found in your
-          data.
-        </p>
+      <!-- Color Configuration Section -->
+      <section class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-4 mb-6">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">2</span>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Configure Card Colors</h2>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Back Card Colors -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Back Card (QR Code)</h3>
+              <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl space-y-4 border border-slate-100 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                  <label for="back-bg" class="text-slate-700 dark:text-slate-300 font-medium">Background Color</label>
+                  <input class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full" type="color" id="back-bg" value="#acc8e5" />
+                </div>
+                <div class="flex items-center justify-between">
+                  <label for="back-text" class="text-slate-700 dark:text-slate-300 font-medium">Text Color</label>
+                  <input class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full" type="color" id="back-text" value="#112a46" />
+                </div>
+              </div>
+            </div>
+            <!-- Dynamic Card Types -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Detected Categories</h3>
+              <div id="dynamic-card-types" class="grid grid-cols-1 sm:grid-cols-2 gap-3 *:bg-white *:dark:bg-slate-800 *:p-3 *:rounded-lg *:border *:border-slate-200 *:dark:border-slate-700 *:shadow-sm *:flex *:items-center *:justify-between">
+                <!-- Dynamic card type color pickers will be inserted here after CSV upload -->
+              </div>
+              <p id="no-csv-message" class="text-xs text-slate-400 italic mt-2">
+                Upload a CSV file to configure colors for card types found in your data.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Settings Section -->
+      <section class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <details class="group">
+          <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer select-none">
+            <div class="flex items-center gap-4">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-sm">3</span>
+              <div>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Advanced Settings</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Configure bleed, margins, and card sizes.</p>
+              </div>
+            </div>
+            <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
+              <i class="ph ph-caret-down text-xl text-slate-500 group-open:rotate-180 transition-transform duration-300"></i>
+            </div>
+          </summary>
+          <div class="px-6 md:px-8 pb-8 pt-0 border-t border-slate-100 dark:border-slate-700/50">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              <div class="space-y-1">
+                <label for="bleed" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Bleed (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="bleed" type="number" value="3" min="0" step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label for="card-size" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Card Size (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="card-size" type="number" value="66" min="1" step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label for="gap" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Card Gap (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="gap" type="number" value="3" min="0.1" step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label for="card-margin" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Card Margin (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="card-margin" type="number" value="3" min="0.1" step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label for="token-size" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Token Size (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="token-size" type="number" value="28" min="1" step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label for="token-gap" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Token Gap (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="token-gap" type="number" value="6" min="0.1" step="0.1" />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label for="token-margin" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Token Margin (mm)</label>
+                <div class="relative rounded-md shadow-sm">
+                  <input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md" id="token-margin" type="number" value="6" min="0.1" step="0.1" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- Generate Button Section -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-6">
+        <div class="text-sm text-slate-500 dark:text-slate-400 text-center md:text-left">
+          <p>Ready to generate your PDF?</p>
+        </div>
+        <button id="generate-btn" onclick="generatePDF()" class="w-full md:w-auto px-8 py-4 bg-primary hover:bg-primary-hover text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl shadow-teal-900/10 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:bg-slate-300 disabled:cursor-not-allowed disabled:hover:shadow-lg disabled:hover:translate-y-0">
+          <i class="ph ph-file-pdf text-2xl"></i>
+          Generate PDF
+        </button>
       </div>
 
-      <div class="section">
-        <h2>4. Generate PDF</h2>
-        <button id="generate-btn" onclick="generatePDF()">Generate PDF</button>
-      </div>
-    </div>
+      <!-- Inspiration Section -->
+      <section class="space-y-8 pt-10 border-t border-slate-200 dark:border-slate-700/50" id="inspiration">
+        <div class="text-center max-w-3xl mx-auto space-y-3">
+          <div class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary">
+            <i class="ph ph-lightbulb text-lg"></i>
+            <span>Inspiration & Ideas</span>
+          </div>
+          <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Beyond Music: Endless Possibilities</h2>
+          <p class="text-slate-600 dark:text-slate-400">
+            The generator is flexible by design. Use the "URL" column to link to any image, portrait, or data point to create diverse guessing games for any topic.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="group bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:border-orange-200 dark:hover:border-orange-900/50 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-orange-50 dark:bg-orange-900/20 text-orange-500 dark:text-orange-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              <i class="ph ph-paint-brush text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Art Gallery</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Link QR codes to famous paintings. Players guess the artist, movement, or year of creation.
+            </p>
+          </div>
+          <div class="group bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:border-sky-200 dark:hover:border-sky-900/50 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-sky-50 dark:bg-sky-900/20 text-sky-500 dark:text-sky-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              <i class="ph ph-film-strip text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Cinema Buff</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Use movie posters as targets. Challenge friends to name the director, lead actor, or release year.
+            </p>
+          </div>
+          <div class="group bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:border-amber-200 dark:hover:border-amber-900/50 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 dark:text-amber-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              <i class="ph ph-books text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Literature</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Link to book covers or author portraits. Guess the title, author, or publication date.
+            </p>
+          </div>
+          <div class="group bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 dark:text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              <i class="ph ph-scroll text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">History</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Portraits of historical figures. Guess the person, their role, or a major event they were part of.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="text-center text-slate-400 dark:text-slate-500 text-sm py-8 border-t border-slate-200 dark:border-slate-800">
+        <p>© 2024 CardGen Pro. All data is processed locally in your browser.</p>
+      </footer>
+    </main>
 
     <script
       type="py"

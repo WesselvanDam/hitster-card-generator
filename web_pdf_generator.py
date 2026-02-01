@@ -30,32 +30,32 @@ def show_error(message):
     """Display an error message to the user."""
     error_div = document.getElementById("error-message")
     error_div.textContent = message
-    error_div.style.display = "block"
+    error_div.classList.remove("hidden")
     success_div = document.getElementById("success-message")
-    success_div.style.display = "none"
+    success_div.classList.add("hidden")
 
 
 def show_success(message):
     """Display a success message to the user."""
     success_div = document.getElementById("success-message")
     success_div.textContent = message
-    success_div.style.display = "block"
+    success_div.classList.remove("hidden")
     error_div = document.getElementById("error-message")
-    error_div.style.display = "none"
+    error_div.classList.add("hidden")
 
 
 def show_status(message):
     """Display a status message to the user."""
     status_div = document.getElementById("status")
     status_div.textContent = message
-    status_div.style.display = "block"
+    status_div.classList.remove("hidden")
 
 
 def hide_messages():
     """Hide all messages."""
-    document.getElementById("error-message").style.display = "none"
-    document.getElementById("success-message").style.display = "none"
-    document.getElementById("status").style.display = "none"
+    document.getElementById("error-message").classList.add("hidden")
+    document.getElementById("success-message").classList.add("hidden")
+    document.getElementById("status").classList.add("hidden")
 
 
 def generate_card_type_colors(card_types):
@@ -66,7 +66,7 @@ def generate_card_type_colors(card_types):
     # Hide the "no CSV" message
     no_csv_msg = document.getElementById("no-csv-message")
     if no_csv_msg:
-        no_csv_msg.style.display = "none"
+        no_csv_msg.classList.add("hidden")
     
     # Generate color picker for each card type
     for card_type in sorted(card_types):
@@ -76,55 +76,39 @@ def generate_card_type_colors(card_types):
             "text": "#000000"
         })
         
-        # Create the HTML structure
-        type_div = document.createElement("div")
-        type_div.className = "card-type-colors"
+        # Create the HTML structure for background color
+        bg_div = document.createElement("div")
         
-        # Title
-        title = document.createElement("h4")
-        title.textContent = f"{card_type.capitalize()} Card"
-        type_div.appendChild(title)
-        
-        # Color input group
-        color_group = document.createElement("div")
-        color_group.className = "color-input-group"
-        
-        # Background color
-        bg_form_group = document.createElement("div")
-        bg_form_group.className = "form-group"
-        
-        bg_label = document.createElement("label")
-        bg_label.setAttribute("for", f"{card_type}-bg")
-        bg_label.textContent = "Background Color:"
-        bg_form_group.appendChild(bg_label)
+        bg_label = document.createElement("span")
+        bg_label.className = "font-medium text-slate-700 dark:text-slate-300"
+        bg_label.textContent = f"{card_type.capitalize()} BG"
+        bg_div.appendChild(bg_label)
         
         bg_input = document.createElement("input")
         bg_input.type = "color"
+        bg_input.className = "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
         bg_input.id = f"{card_type}-bg"
         bg_input.value = default_colors["bg"]
-        bg_form_group.appendChild(bg_input)
+        bg_div.appendChild(bg_input)
         
-        color_group.appendChild(bg_form_group)
+        container.appendChild(bg_div)
         
-        # Text color
-        text_form_group = document.createElement("div")
-        text_form_group.className = "form-group"
+        # Create the HTML structure for text color
+        text_div = document.createElement("div")
         
-        text_label = document.createElement("label")
-        text_label.setAttribute("for", f"{card_type}-text")
-        text_label.textContent = "Text Color:"
-        text_form_group.appendChild(text_label)
+        text_label = document.createElement("span")
+        text_label.className = "font-medium text-slate-700 dark:text-slate-300"
+        text_label.textContent = f"{card_type.capitalize()} Text"
+        text_div.appendChild(text_label)
         
         text_input = document.createElement("input")
         text_input.type = "color"
+        text_input.className = "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
         text_input.id = f"{card_type}-text"
         text_input.value = default_colors["text"]
-        text_form_group.appendChild(text_input)
+        text_div.appendChild(text_input)
         
-        color_group.appendChild(text_form_group)
-        
-        type_div.appendChild(color_group)
-        container.appendChild(type_div)
+        container.appendChild(text_div)
 
 
 def validate_csv_data(data):
