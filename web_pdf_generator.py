@@ -28,34 +28,23 @@ def rgb_from_hex(hex_color):
 
 def show_error(message):
     """Display an error message to the user."""
-    error_div = document.getElementById("error-message")
-    error_div.textContent = message
-    error_div.classList.remove("hidden")
-    success_div = document.getElementById("success-message")
-    success_div.classList.add("hidden")
+    from js import window
+
+    window.showAlert(message, "error")
 
 
 def show_success(message):
     """Display a success message to the user."""
-    success_div = document.getElementById("success-message")
-    success_div.textContent = message
-    success_div.classList.remove("hidden")
-    error_div = document.getElementById("error-message")
-    error_div.classList.add("hidden")
+    from js import window
+
+    window.showAlert(message, "success")
 
 
 def show_status(message):
     """Display a status message to the user."""
-    status_div = document.getElementById("status")
-    status_div.textContent = message
-    status_div.classList.remove("hidden")
+    from js import window
 
-
-def hide_messages():
-    """Hide all messages."""
-    document.getElementById("error-message").classList.add("hidden")
-    document.getElementById("success-message").classList.add("hidden")
-    document.getElementById("status").classList.add("hidden")
+    window.showAlert(message, "status")
 
 
 def generate_card_type_colors(card_types):
@@ -139,9 +128,9 @@ def validate_csv_data(data):
 
 
 def validate_config(config):
-    """Validate that the configuration is valid."""
-    PAPER_WIDTH = config["PAPER_WIDTH"]
-    PAPER_HEIGHT = config["PAPER_HEIGHT"]
+    """Validate that the configuration is valid (basic server-side check)."""
+    # Note: Main validation is done on the frontend in JavaScript
+    # This is a backup validation in case JavaScript is disabled or bypassed
 
     # Check if all values are positive
     for key, value in config.items():
@@ -150,35 +139,12 @@ def validate_config(config):
         if value < 0:
             return False, f"Configuration value '{key}' must be positive"
 
-    # Check card configuration
-    card_size = config["CARD_SIZE"]
-    gap = config["GAP"]
-    card_margin = config["CARD_MARGIN"]
-
-    if (PAPER_WIDTH - 2 * card_margin + gap) % (card_size + gap) != 0:
-        return (
-            False,
-            f"Invalid card configuration: the card size ({card_size}mm) and gap ({gap}mm) should fit perfectly in the width of the page ({PAPER_WIDTH}mm), minus the margin ({card_margin}mm). Please adjust these values.",
-        )
-
-    # Check token configuration
-    token_size = config["TOKEN_SIZE"]
-    token_gap = config["TOKEN_GAP"]
-    token_margin = config["TOKEN_MARGIN"]
-
-    if (PAPER_WIDTH - 2 * token_margin + token_gap) % (token_size + token_gap) != 0:
-        return (
-            False,
-            f"Invalid token configuration: the token size ({token_size}mm) and gap ({token_gap}mm) should fit perfectly in the width of the page ({PAPER_WIDTH}mm), minus the margin ({token_margin}mm). Please adjust these values.",
-        )
-
     return True, "Configuration is valid"
 
 
 async def load_csv_file(event):
     """Load and validate the CSV file."""
     global csv_data
-    hide_messages()
 
     file_list = event.target.files
     if not file_list.length:
@@ -215,6 +181,9 @@ async def load_csv_file(event):
         show_error(
             f"Error reading CSV file: {str(e)}. Please ensure your file is in CSV format with semicolon or comma separators."
         )
+        # Reset the input value to allow re-upload
+        document.getElementById("csv-file").value = ""
+        # Reset the csv_data variable
         csv_data = None
 
 
@@ -299,7 +268,7 @@ def create_pdf_bytes(data, config):
     # Calculate the number of columns and rows that fit on the page.
     n_columns = int((PAPER_WIDTH - 2 * CARD_MARGIN + GAP) // (CARD_SIZE + GAP))
     n_rows_per_page = int((PAPER_HEIGHT - 2 * CARD_MARGIN + GAP) // (CARD_SIZE + GAP))
-    n_rows = len(data) // n_columns + 1
+    n_rows = math.ceil(len(data) / n_columns)
 
     # Calculate the number of pages needed.
     n_pages = math.ceil(n_rows / n_rows_per_page)
@@ -362,9 +331,6 @@ def collect_config():
     config["CARD_SIZE"] = float(document.getElementById("card-size").value)
     config["GAP"] = float(document.getElementById("gap").value)
     config["CARD_MARGIN"] = float(document.getElementById("card-margin").value)
-    config["TOKEN_SIZE"] = float(document.getElementById("token-size").value)
-    config["TOKEN_GAP"] = float(document.getElementById("token-gap").value)
-    config["TOKEN_MARGIN"] = float(document.getElementById("token-margin").value)
 
     # Color configuration - always include back
     config["CARD_COLORS"] = {
@@ -392,8 +358,6 @@ def collect_config():
 def generate_pdf(event=None):
     """Generate the PDF from the loaded CSV data and configuration."""
     global csv_data
-
-    hide_messages()
 
     # Check if CSV data is loaded
     if csv_data is None:

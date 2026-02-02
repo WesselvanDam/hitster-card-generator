@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Card PDF Generator</title>
+    <title>Hitster Card PDF Generator</title>
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -68,6 +69,22 @@
           transform: translateY(0);
         }
       }
+      .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+      .animate-fade-out {
+        animation: fadeOut 0.3s ease-out;
+      }
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(10px);
+        }
+      }
       input[type="color"] {
         -webkit-appearance: none;
         border: none;
@@ -88,6 +105,11 @@
   </head>
   <body
     class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-body transition-colors duration-300">
+    <!-- Floating Alert Container -->
+    <div
+      id="alert-container"
+      class="fixed bottom-4 right-4 z-50 space-y-3 pointer-events-none max-w-md"></div>
+
     <!-- Navigation -->
     <nav
       class="sticky top-0 z-50 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
@@ -95,11 +117,11 @@
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center gap-3">
             <div class="bg-primary text-white p-2 rounded-lg">
-              <i class="ph ph-cards text-xl"></i>
+              <i class="ph ph-speaker-hifi text-xl"></i>
             </div>
             <span
               class="font-bold text-xl tracking-tight text-slate-900 dark:text-white"
-              >CardGen Pro</span
+              >HitsterPDF</span
             >
           </div>
           <div class="flex items-center gap-4">
@@ -268,17 +290,6 @@
         </div>
       </details>
 
-      <!-- Messages -->
-      <div
-        id="error-message"
-        class="hidden p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300"></div>
-      <div
-        id="success-message"
-        class="hidden p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300"></div>
-      <div
-        id="status"
-        class="hidden p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"></div>
-
       <!-- Upload Section -->
       <section
         class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
@@ -416,6 +427,62 @@
           </summary>
           <div
             class="px-6 md:px-8 pb-8 pt-0 border-t border-slate-100 dark:border-slate-700/50">
+            <!-- Explanation Section -->
+            <div
+              class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <h3
+                class="font-semibold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
+                <i class="ph ph-info"></i>
+                Configuration Guidelines
+              </h3>
+              <ul class="text-sm text-blue-800 dark:text-blue-300 space-y-1.5">
+                <li
+                  ><strong>Paper Width/Height:</strong> Standard A4 is
+                  210×297mm.</li
+                >
+                <li
+                  ><strong>Bleed:</strong> Extra space around the page edge for
+                  printing (typically 3mm). This is usually necessary if you're
+                  printing the PDF at a professional print shop. Set it to zero
+                  if you're printing at home.</li
+                >
+                <li
+                  ><strong>Card Size:</strong> The size of each square card on
+                  the page. 66 mm is about the same size as the original Hitster
+                  cards.</li
+                >
+                <li
+                  ><strong>Card Gap:</strong> Space between cards for
+                  cutting.</li
+                >
+                <li
+                  ><strong>Card Margin:</strong> Space from the page edge to the
+                  first card.</li
+                >
+              </ul>
+              <h3
+                class="font-semibold text-blue-900 dark:text-blue-300 mb-2 mt-4 flex items-center gap-2">
+                <i class="ph ph-sliders"></i>
+                Constraints
+              </h3>
+              <p
+                class="text-sm text-blue-800 dark:text-blue-300 mt-3 font-medium">
+                To be able to align both sides of the card for double-sided
+                printing, there are specific constraints: The paper width minus
+                twice the card margin
+                <strong>must be exactly equal to</strong> N times the card size
+                <em>plus</em> N minus 1 times the card gap.
+                <br />
+                With the default values, this means:
+                <br />
+                <em>(210mm - 2×3mm) = 3 × 66mm + 2 × 3mm</em>
+                <br />
+                You probably want to stick to the default values, but changing
+                them might be necessary if you want differently sized cards or
+                are using non-standard paper sizes.
+              </p>
+            </div>
+
             <div
               class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               <div class="space-y-1">
@@ -431,7 +498,8 @@
                     type="number"
                     value="210"
                     min="1"
-                    step="0.1" />
+                    step="0.1"
+                    oninput="validateConfig()" />
                 </div>
               </div>
               <div class="space-y-1">
@@ -447,7 +515,8 @@
                     type="number"
                     value="297"
                     min="1"
-                    step="0.1" />
+                    step="0.1"
+                    oninput="validateConfig()" />
                 </div>
               </div>
               <div class="space-y-1">
@@ -463,7 +532,8 @@
                     type="number"
                     value="3"
                     min="0"
-                    step="0.1" />
+                    step="0.1"
+                    oninput="validateConfig()" />
                 </div>
               </div>
               <div class="space-y-1">
@@ -479,7 +549,8 @@
                     type="number"
                     value="66"
                     min="1"
-                    step="0.1" />
+                    step="0.1"
+                    oninput="validateConfig()" />
                 </div>
               </div>
               <div class="space-y-1">
@@ -495,7 +566,8 @@
                     type="number"
                     value="3"
                     min="0.1"
-                    step="0.1" />
+                    step="0.1"
+                    oninput="validateConfig()" />
                 </div>
               </div>
               <div class="space-y-1">
@@ -511,58 +583,16 @@
                     type="number"
                     value="3"
                     min="0.1"
-                    step="0.1" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <label
-                  for="token-size"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Token Size (mm)</label
-                >
-                <div class="relative rounded-md shadow-sm">
-                  <input
-                    class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
-                    id="token-size"
-                    type="number"
-                    value="28"
-                    min="1"
-                    step="0.1" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <label
-                  for="token-gap"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Token Gap (mm)</label
-                >
-                <div class="relative rounded-md shadow-sm">
-                  <input
-                    class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
-                    id="token-gap"
-                    type="number"
-                    value="6"
-                    min="0.1"
-                    step="0.1" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <label
-                  for="token-margin"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Token Margin (mm)</label
-                >
-                <div class="relative rounded-md shadow-sm">
-                  <input
-                    class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
-                    id="token-margin"
-                    type="number"
-                    value="6"
-                    min="0.1"
-                    step="0.1" />
+                    step="0.1"
+                    oninput="validateConfig()" />
                 </div>
               </div>
             </div>
+
+            <!-- Validation Message -->
+            <div
+              id="config-validation-message"
+              class="hidden mt-4 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300"></div>
           </div>
         </details>
       </section>
@@ -582,6 +612,79 @@
           Generate PDF
         </button>
       </div>
+
+      <!-- Tips Section -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12 border-t border-slate-200 dark:border-slate-700/50">
+        <div
+          class="flex items-start gap-5 p-6 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm">
+          <div
+            class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center">
+            <i class="ph ph-lightbulb text-3xl"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-bold text-slate-900 dark:text-white"
+              >Pro Printing Tip</h3
+            >
+            <p
+              class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              For a retail feel, use thick cardstock (around
+              <span class="font-semibold">300g/m²</span>). Consider using a paper cutter for perfectly clean edges and uniformity.
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start gap-5 p-6 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm">
+          <div
+            class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 flex items-center justify-center">
+            <i class="ph ph-coins text-3xl"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-bold text-slate-900 dark:text-white"
+              >Add Some Tokens!</h3
+            >
+            <p
+              class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              The base game also includes tokens for additional gameplay. If you don't have any, consider downloading our <a href="/assets/tokens.pdf" class="text-primary hover:text-primary-hover underline">printable token sheet</a> to complete your set!
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start gap-5 p-6 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm">
+          <div
+            class="flex-shrink-0 w-12 h-12 rounded-full bg-sky-50 dark:bg-sky-900/20 text-sky-500 flex items-center justify-center">
+            <i class="ph ph-question text-3xl"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-bold text-slate-900 dark:text-white"
+              >Questions?</h3
+            >
+            <p
+              class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              Need help or have suggestions? Feel free to reach out by sending an e-mail to <a href="mailto:wessel@wesselvandam.com" class="text-primary hover:text-primary-hover underline">wessel@wesselvandam.com</a>.
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start gap-5 p-6 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm">
+          <div
+            class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-900/20 text-rose-500 flex items-center justify-center">
+            <i class="ph ph-coffee text-3xl"></i>
+          </div>
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <h3 class="font-bold text-slate-900 dark:text-white"
+                >Support the Project</h3
+              >
+              <p
+                class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                Enjoying the tool? Help keep it free and running with a small
+                donation. Every coffee counts!
+              </p>
+            </div>
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="wesselvandam" data-color="#FFDD00" data-emoji=""  data-font="Poppins" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
+          </div>
+        </div>
+      </section>
 
       <!-- Inspiration Section -->
       <section
@@ -610,12 +713,12 @@
               <i class="ph ph-paint-brush text-3xl"></i>
             </div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2"
-              >Art Gallery</h3
+              >Art History</h3
             >
             <p
               class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Link QR codes to famous paintings. Players guess the artist,
-              movement, or year of creation.
+              Link QR codes to famous paintings. Players guess the artwork,
+              artist, and year of creation.
             </p>
           </div>
           <div
@@ -625,12 +728,12 @@
               <i class="ph ph-film-strip text-3xl"></i>
             </div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2"
-              >Cinema Buff</h3
+              >Cinema & TV</h3
             >
             <p
               class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Use movie posters as targets. Challenge friends to name the
-              director, lead actor, or release year.
+              Use movie posters or trailers as targets. Name the title,
+              director, and release year.
             </p>
           </div>
           <div
@@ -645,7 +748,7 @@
             <p
               class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               Link to book covers or author portraits. Guess the title, author,
-              or publication date.
+              and publication date.
             </p>
           </div>
           <div
@@ -659,8 +762,8 @@
             >
             <p
               class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Portraits of historical figures. Guess the person, their role, or
-              a major event they were part of.
+              Portraits of historical figures. Guess the person, nationality,
+              and birth year.
             </p>
           </div>
         </div>
@@ -669,11 +772,145 @@
       <!-- Footer -->
       <footer
         class="text-center text-slate-400 dark:text-slate-500 text-sm py-8 border-t border-slate-200 dark:border-slate-800">
-        <p
-          >© 2024 CardGen Pro. All data is processed locally in your browser.</p
-        >
+        <p>Note: All data is processed locally in your browser.</p>
       </footer>
     </main>
+
+    <script>
+      // Alert system for floating notifications
+      function showAlert(message, type = "info") {
+        const container = document.getElementById("alert-container");
+        const alertId = `alert-${Date.now()}`;
+
+        // Determine colors based on alert type
+        let bgColor, textColor, borderColor, icon;
+        switch (type) {
+          case "error":
+            bgColor = "bg-red-50 dark:bg-red-900/20";
+            textColor = "text-red-800 dark:text-red-300";
+            borderColor = "border-red-200 dark:border-red-800";
+            icon =
+              '<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>';
+            break;
+          case "success":
+            bgColor = "bg-green-50 dark:bg-green-900/20";
+            textColor = "text-green-800 dark:text-green-300";
+            borderColor = "border-green-200 dark:border-green-800";
+            icon =
+              '<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5L11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>';
+            break;
+          case "status":
+          default:
+            bgColor = "bg-slate-50 dark:bg-slate-800";
+            textColor = "text-slate-700 dark:text-slate-300";
+            borderColor = "border-slate-200 dark:border-slate-700";
+            icon =
+              '<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>';
+        }
+
+        const alertHtml = `
+          <div id="${alertId}" class="flex items-start p-4 rounded-lg ${bgColor} ${borderColor} border ${textColor} shadow-lg pointer-events-auto animate-fade-in">
+            <svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              ${icon}
+            </svg>
+            <div class="ms-3 text-sm font-medium flex-1">${message}</div>
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 rounded focus:ring-2 focus:ring-offset-0 focus:ring-offset-transparent inline-flex items-center justify-center h-8 w-8 shrink-0 transition-colors hover:opacity-75" aria-label="Close" onclick="document.getElementById('${alertId}').remove()">
+              <span class="sr-only">Close</span>
+              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+              </svg>
+            </button>
+          </div>
+        `;
+
+        container.insertAdjacentHTML("beforeend", alertHtml);
+
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+          const alert = document.getElementById(alertId);
+          if (alert) {
+            alert.classList.add("animate-fade-out");
+            setTimeout(() => alert.remove(), 300);
+          }
+        }, 8000);
+      }
+
+      // JavaScript validation function for configuration
+      function validateConfig() {
+        const paperWidth = parseFloat(
+          document.getElementById("paper-width").value,
+        );
+        const paperHeight = parseFloat(
+          document.getElementById("paper-height").value,
+        );
+        const cardSize = parseFloat(document.getElementById("card-size").value);
+        const gap = parseFloat(document.getElementById("gap").value);
+        const cardMargin = parseFloat(
+          document.getElementById("card-margin").value,
+        );
+        const bleed = parseFloat(document.getElementById("bleed").value);
+
+        const validationMsg = document.getElementById(
+          "config-validation-message",
+        );
+        const generateBtn = document.getElementById("generate-btn");
+        let errors = [];
+
+        // Check if all values are positive
+        if (
+          paperWidth <= 0 ||
+          paperHeight <= 0 ||
+          cardSize <= 0 ||
+          gap < 0 ||
+          cardMargin < 0 ||
+          bleed < 0
+        ) {
+          errors.push(
+            "All values must be positive (gaps and margins can be 0).",
+          );
+        }
+
+        // Check card configuration - must fit perfectly
+        const cardFitCheck =
+          (paperWidth - 2 * cardMargin + gap) % (cardSize + gap);
+        if (Math.abs(cardFitCheck) > 0.001) {
+          // Allow for floating point errors
+          const numCards = Math.floor(
+            (paperWidth - 2 * cardMargin + gap) / (cardSize + gap),
+          );
+          const remainder =
+            paperWidth -
+            2 * cardMargin -
+            numCards * cardSize -
+            (numCards - 1) * gap;
+          errors.push(
+            `Card configuration doesn't fit: With paper width ${paperWidth}mm and margin ${cardMargin}mm, ` +
+              `${numCards} cards of ${cardSize}mm with ${gap}mm gaps leave ${remainder.toFixed(2)}mm unused. ` +
+              `Try adjusting card size or gap to fit perfectly.`,
+          );
+        }
+
+        // Display validation results
+        if (errors.length > 0) {
+          validationMsg.innerHTML =
+            '<strong>Configuration Error:</strong><ul class="mt-2 ml-4 list-disc space-y-1">' +
+            errors.map((e) => `<li>${e}</li>`).join("") +
+            "</ul>";
+          validationMsg.classList.remove("hidden");
+          generateBtn.disabled = true;
+          generateBtn.classList.add("opacity-50", "cursor-not-allowed");
+        } else {
+          validationMsg.classList.add("hidden");
+          generateBtn.disabled = false;
+          generateBtn.classList.remove("opacity-50", "cursor-not-allowed");
+        }
+      }
+
+      // Run validation on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        validateConfig();
+      });
+    </script>
 
     <script
       type="py"
