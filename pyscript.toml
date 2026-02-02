@@ -1,9 +1,0 @@
-name = "card-pdf-generator"
-description = "A web application to generate card PDFs from CSV files"
-
-packages = [
-    "pandas",
-    "fpdf2",
-    "qrcode",
-    "pillow"
-]

@@ -1,6 +1,6 @@
+import csv
 import io
-import pandas as pd
-from js import document, console, Uint8Array, File, Blob, URL
+from js import document, Uint8Array, Blob, URL
 from pyodide.ffi import create_proxy
 import math
 from fpdf import FPDF
@@ -103,26 +103,24 @@ def validate_csv_data(data):
     """Validate that the CSV data has the required columns and valid values."""
     required_columns = ["type", "url", "top", "center", "bottom"]
 
+    if not data:
+        return False, "CSV data is empty"
+
     # Check if all required columns exist
-    missing_columns = [col for col in required_columns if col not in data.columns]
+    missing_columns = [col for col in required_columns if col not in data[0].keys()]
     if missing_columns:
         return False, f"Missing required columns: {', '.join(missing_columns)}"
 
-    # Check if type column is not empty
-    if data["type"].isna().any():
-        return False, "Type column cannot contain empty values"
-
-    # Check if url column is not empty
-    if data["url"].isna().any():
-        return False, "URL column cannot contain empty values"
-
-    # Check if top column is not empty
-    if data["top"].isna().any():
-        return False, "Top column cannot contain empty values"
-
-    # Check if bottom column is not empty (center can be empty)
-    if data["bottom"].isna().any():
-        return False, "Bottom column cannot contain empty values"
+    # Check required fields are not empty (center can be empty)
+    for idx, row in enumerate(data, start=1):
+        if not str(row.get("type", "")).strip():
+            return False, f"Type column cannot contain empty values (row {idx})"
+        if not str(row.get("url", "")).strip():
+            return False, f"URL column cannot contain empty values (row {idx})"
+        if not str(row.get("top", "")).strip():
+            return False, f"Top column cannot contain empty values (row {idx})"
+        if not str(row.get("bottom", "")).strip():
+            return False, f"Bottom column cannot contain empty values (row {idx})"
 
     return True, "CSV data is valid"
 
@@ -158,7 +156,17 @@ async def load_csv_file(event):
 
     try:
         # Try to read the CSV with automatic delimiter detection
-        csv_data = pd.read_csv(io.BytesIO(bytes_data), sep=None, engine="python")
+        text_data = bytes_data.decode("utf-8", errors="replace")
+        sample = text_data[:4096]
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters=[",", ";", "\t", "|"])
+        except csv.Error:
+            dialect = csv.excel
+
+        reader = csv.DictReader(io.StringIO(text_data), dialect=dialect)
+        csv_data = [
+            row for row in reader if any((v or "").strip() for v in row.values())
+        ]
 
         # Validate the CSV data
         is_valid, message = validate_csv_data(csv_data)
@@ -168,7 +176,9 @@ async def load_csv_file(event):
             return
 
         # Get unique card types (excluding 'back' if present)
-        unique_types = [t for t in csv_data["type"].unique() if t != "back"]
+        unique_types = sorted(
+            {row["type"] for row in csv_data if row.get("type") != "back"}
+        )
 
         # Generate color pickers for each type
         generate_card_type_colors(unique_types)
@@ -199,7 +209,7 @@ def create_card_front(record, pdf, config):
     pdf.set_fill_color(255, 255, 255)
 
     # Place the center in the center of the card
-    if not pd.isna(record["center"]) and str(record["center"]).strip():
+    if str(record.get("center", "")).strip():
         pdf.set_text_color(*COLOR["text"])
         pdf.set_font(size=48, style="B")
         pdf.set_xy(card_x + (CARD_SIZE / 2), card_y + CARD_SIZE / 2 - pdf.font_size / 2)
@@ -211,7 +221,7 @@ def create_card_front(record, pdf, config):
     pdf.multi_cell(CARD_SIZE - 4, None, record["top"], align="X")
 
     # Place the bottom text below the center
-    if not pd.isna(record["bottom"]):
+    if str(record.get("bottom", "")).strip():
         pdf.set_font(style="I")
         pdf.set_xy(card_x + (CARD_SIZE / 2), card_y + CARD_SIZE - 14)
         pdf.multi_cell(CARD_SIZE - 4, None, record["bottom"], align="X")
@@ -275,13 +285,9 @@ def create_pdf_bytes(data, config):
 
     for page in range(n_pages):
         # Get the cards for this page.
-        cards_on_page = data[
-            page
-            * n_rows_per_page
-            * n_columns : (page + 1)
-            * n_rows_per_page
-            * n_columns
-        ]
+        start_idx = page * n_rows_per_page * n_columns
+        end_idx = (page + 1) * n_rows_per_page * n_columns
+        cards_on_page = data[start_idx:end_idx]
         pdf.add_page()
 
         # Create the front of the cards, starting at the top left corner of the page
@@ -292,7 +298,7 @@ def create_pdf_bytes(data, config):
                 idx = i + j * n_columns
                 if idx >= len(cards_on_page):
                     break
-                record = cards_on_page.iloc[idx]
+                record = cards_on_page[idx]
                 # Set the position of the card
                 pdf.set_xy(row_x, row_y + j * CARD_SIZE + j * GAP)
                 create_card_front(record, pdf, config)
@@ -309,7 +315,7 @@ def create_pdf_bytes(data, config):
                 idx = i + j * n_columns
                 if idx >= len(cards_on_page):
                     break
-                record = cards_on_page.iloc[idx]
+                record = cards_on_page[idx]
                 # Set the position of the card
                 pdf.set_xy(row_x, row_y + j * CARD_SIZE + j * GAP)
                 create_card_back(record, pdf, config)
@@ -342,8 +348,8 @@ def collect_config():
 
     # Dynamically collect colors for card types found in CSV
     if csv_data is not None:
-        unique_types = [t for t in csv_data["type"].unique() if t != "back"]
-        for card_type in unique_types:
+        unique_types = {row["type"] for row in csv_data if row.get("type") != "back"}
+        for card_type in sorted(unique_types):
             bg_input = document.getElementById(f"{card_type}-bg")
             text_input = document.getElementById(f"{card_type}-text")
             if bg_input and text_input:
