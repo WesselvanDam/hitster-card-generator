@@ -165,23 +165,11 @@
           <div
             class="absolute -inset-1 bg-gradient-to-r from-teal-400 to-emerald-400 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
           <div
-            class="relative bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-200 dark:border-slate-700">
-            <div
-              class="relative w-40 h-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg rotate-[-6deg] flex flex-col items-center justify-center p-4">
-              <div
-                class="w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded mb-2 flex items-center justify-center">
-                <i class="ph ph-qr-code text-4xl text-slate-400"></i>
-              </div>
-              <div
-                class="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded mb-1"></div>
-              <div
-                class="w-2/3 h-2 bg-slate-100 dark:bg-slate-700 rounded"></div>
-            </div>
-            <div
-              class="absolute w-40 h-56 bg-primary rounded-lg shadow-2xl rotate-[6deg] flex flex-col items-center justify-center p-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <i class="ph ph-music-notes text-white text-5xl opacity-80"></i>
-              <p class="text-white font-bold mt-4">HITSTER</p>
-            </div>
+            class="relative bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-200 dark:border-slate-700 p-2">
+            <img
+              src="assets/example-cards.webp"
+              alt="Example of generated Hitster cards"
+              class="w-full h-full object-cover rounded-md" />
           </div>
         </div>
       </section>
@@ -205,7 +193,7 @@
             that you want to turn into cards. While some websites allow you to
             link to a Spotify playlist, those may not get the song metadata
             correctly. Using a CSV, you have full control over the data and can
-            customize it as needed.</p
+            customize it as needed. Feel free to check out our <a href="assets/data.csv" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-hover">example CSV file</a>.</p
           >
           <p class="font-medium my-2">Required Columns:</p>
           <ul
@@ -223,7 +211,7 @@
                 class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
                 >url</code
               >: Valid URL for QR code. For example, a Spotify link or a link to
-              an image (make sure the link is publicly accessible).</li
+              an image. Make sure the link is publicly accessible, and that the link text does not spoil any answers!</li
             >
             <li
               ><code
