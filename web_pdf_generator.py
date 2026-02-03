@@ -11,7 +11,7 @@ import qrcode
 config = {}
 csv_data = None
 
-# Default colors for common card types
+# Default colors for common card categories
 DEFAULT_COLORS = {
     "song": {"bg": "#8cbeb2", "text": "#192623"},
     "video": {"bg": "#f3b562", "text": "#33230e"},
