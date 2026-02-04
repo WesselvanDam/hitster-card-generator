@@ -36,12 +36,10 @@
         },
       };
     </script>
-    <link
-      rel="stylesheet"
-      href="https://pyscript.net/releases/2026.1.1/core.css" />
-    <script
-      type="module"
-      src="https://pyscript.net/releases/2026.1.1/core.js"></script>
+    <!-- JavaScript libraries for CSV parsing, PDF generation, and QR codes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
       ::-webkit-scrollbar {
         width: 8px;
@@ -967,9 +965,7 @@
       });
     </script>
 
-    <script
-      type="py"
-      src="./web_pdf_generator.py"
-      config='{"packages":["fpdf2", "qrcode"]}'></script>
+    <!-- JavaScript PDF generator -->
+    <script src="./web_pdf_generator.js"></script>
   </body>
 </html>
