@@ -1,11 +1,12 @@
 # Hitster Card Creator
 
-This Python project allows you to create printable cards and tokens for a game similar to the music guessing game **Hitster**. The generated PDF contains double-sided cards and tokens that can be printed, cut out, and used for gameplay.
+This project allows you to create printable cards and tokens for a game similar to the music guessing game **Hitster**. The generated PDF contains double-sided cards that can be printed, cut out, and used for gameplay.
 
 If anything is unclear, please feel free to [open an issue](https://github.com/WesselvanDam/hitster-card-generator/issues) or [contact me](mailto:wessel@wesselvandam.nl) directly. I will do my best to help you out!
 
 ## Features
 
+- Both a Python script for those who want to tweak the behaviour, and a [https://wesselvandam.github.io/hitster-card-generator](webpage) for those who want a no-code solution that works right out of the box.
 - Generate a PDF with cards based on data from a CSV file.
 - Cards can represent various types of content, such as songs, videos, articles, or paintings. Don't limit yourself to just music! I made this project to create a Hitster-like game with some music, but also a lot of photos which one had to put in the right order.
 - Customizable card and page configurations, including colors and sizes.
@@ -15,7 +16,7 @@ If anything is unclear, please feel free to [open an issue](https://github.com/W
 
 If you have a CSV file with the following content:
 
-| Type    | URL                                                                 | Top                | Bottom               | Center |
+| type    | url                                                                 | top                | bottom               | center |
 |---------|---------------------------------------------------------------------|--------------------|----------------------|--------|
 | song    | [{long url}](https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=f51ee06bce0e4a94) | Rick Astley        | Never Gonna Give You Up | 1987   |
 | song    | [{long url}](https://open.spotify.com/track/17xGX76BVzLRSbpYteAGR4?si=86f7c45002f74cd2) | Keane              | Bedshaped            | 2004   |
@@ -41,7 +42,9 @@ Note that the QR code on the top right corner of the page on the right correspon
 
 ## Getting Started
 
-If you are not familiar with Python or Git, you might want to check out [this Google Colab notebook](https://colab.research.google.com/drive/1wJosGkdxvzGYWLykdSODbbToHJt-_Z4P?usp=sharing) that provides a step-by-step guide to generating your own cards and tokens. The notebook includes instructions on how to upload your CSV file and run the code without needing to install anything on your local machine.
+Visit the [https://wesselvandam.github.io/hitster-card-generator](webpage version) if you just want to upload your CSV and get the PDF.
+
+Otherwise, you can use the Python version located in the `src` directory. If you are not familiar with Python or Git, you might want to check out [this Google Colab notebook](https://colab.research.google.com/drive/1wJosGkdxvzGYWLykdSODbbToHJt-_Z4P?usp=sharing) that provides a step-by-step guide to generating your own cards and tokens. The notebook includes instructions on how to upload your CSV file and run the code without needing to install anything on your local machine.
 
 If you prefer to run the code locally, follow the instructions below.
 
