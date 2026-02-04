@@ -173,6 +173,28 @@ function validateConfig(config) {
 }
 
 /**
+ * Reset the CSV upload section to initial state
+ */
+function resetCsvUpload() {
+  // Reset the file input
+  document.getElementById("csv-file").value = "";
+  csvData = null;
+
+  // Hide success state and show upload prompt
+  document.getElementById("csv-upload-success").classList.add("hidden");
+  document.getElementById("csv-upload-prompt").classList.remove("hidden");
+}
+
+/**
+ * Update the upload UI to show the uploaded filename
+ */
+function updateUploadUI(filename) {
+  document.getElementById("csv-filename").textContent = filename;
+  document.getElementById("csv-upload-prompt").classList.add("hidden");
+  document.getElementById("csv-upload-success").classList.remove("hidden");
+}
+
+/**
  * Load and validate the CSV file
  */
 async function loadCsvFile(event) {
@@ -209,6 +231,9 @@ async function loadCsvFile(event) {
           ),
         ];
 
+        // Update the upload UI with the filename
+        updateUploadUI(file.name);
+
         // Generate color pickers for each type
         generateCardTypeColors(uniqueTypes);
 
@@ -221,17 +246,15 @@ async function loadCsvFile(event) {
           `Error reading CSV file: ${error.message}. Please ensure your file is in CSV format.`,
         );
         // Reset the input value to allow re-upload
-        document.getElementById("csv-file").value = "";
-        csvData = null;
+        resetCsvUpload();
       },
     });
   } catch (e) {
     showError(
       `Error reading CSV file: ${e.message}. Please ensure your file is in CSV format.`,
     );
-    // Reset the input value to allow re-upload
-    document.getElementById("csv-file").value = "";
-    csvData = null;
+    // Reset the input and UI
+    resetCsvUpload();
   }
 }
 

@@ -213,7 +213,9 @@
               >Upload CSV File</h2
             >
           </div>
+          <!-- Initial upload state -->
           <div
+            id="csv-upload-prompt"
             class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group relative">
             <div class="space-y-2 text-center">
               <div
@@ -238,6 +240,31 @@
               id="csv-file"
               type="file"
               accept=".csv" />
+          </div>
+          <!-- Uploaded state -->
+          <div
+            id="csv-upload-success"
+            class="hidden mt-2 flex items-center justify-between px-6 py-5 border-2 border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+            <div class="flex items-center gap-4">
+              <div
+                class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400">
+                <i class="ph ph-check text-xl"></i>
+              </div>
+              <div>
+                <p
+                  class="text-sm font-medium text-emerald-900 dark:text-emerald-300"
+                  >CSV file uploaded</p
+                >
+                <p
+                  id="csv-filename"
+                  class="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5"></p>
+              </div>
+            </div>
+            <button
+              onclick="resetCsvUpload()"
+              class="px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-800 rounded-lg transition-colors">
+              Change
+            </button>
           </div>
         </div>
       </section>
