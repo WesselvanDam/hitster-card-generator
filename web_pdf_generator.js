@@ -73,7 +73,8 @@ function generateCardTypeColors(cardTypes) {
 
     const bgInput = document.createElement("input");
     bgInput.type = "color";
-    bgInput.className = "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full";
+    bgInput.className =
+      "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full";
     bgInput.id = `${cardType}-bg`;
     bgInput.value = defaultColors.bg;
     bgDiv.appendChild(bgInput);
@@ -90,7 +91,8 @@ function generateCardTypeColors(cardTypes) {
 
     const textInput = document.createElement("input");
     textInput.type = "color";
-    textInput.className = "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full";
+    textInput.className =
+      "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full";
     textInput.id = `${cardType}-text`;
     textInput.value = defaultColors.text;
     textDiv.appendChild(textInput);
@@ -110,9 +112,7 @@ function validateCsvData(data) {
   }
 
   // Check if all required columns exist
-  const missingColumns = requiredColumns.filter(
-    (col) => !(col in data[0])
-  );
+  const missingColumns = requiredColumns.filter((col) => !(col in data[0]));
   if (missingColumns.length > 0) {
     return {
       valid: false,
@@ -191,7 +191,7 @@ async function loadCsvFile(event) {
       complete: function (results) {
         // Filter out completely empty rows
         csvData = results.data.filter((row) =>
-          Object.values(row).some((v) => (v || "").trim())
+          Object.values(row).some((v) => (v || "").trim()),
         );
 
         // Validate the CSV data
@@ -205,7 +205,7 @@ async function loadCsvFile(event) {
         // Get unique card types (excluding 'back' if present)
         const uniqueTypes = [
           ...new Set(
-            csvData.map((row) => row.type).filter((type) => type !== "back")
+            csvData.map((row) => row.type).filter((type) => type !== "back"),
           ),
         ];
 
@@ -213,12 +213,12 @@ async function loadCsvFile(event) {
         generateCardTypeColors(uniqueTypes);
 
         showSuccess(
-          `CSV file loaded successfully! Found ${csvData.length} cards with ${uniqueTypes.length} unique type(s): ${uniqueTypes.sort().join(", ")}.`
+          `CSV file loaded successfully! Found ${csvData.length} cards with ${uniqueTypes.length} unique type(s): ${uniqueTypes.sort().join(", ")}.`,
         );
       },
       error: function (error) {
         showError(
-          `Error reading CSV file: ${error.message}. Please ensure your file is in CSV format.`
+          `Error reading CSV file: ${error.message}. Please ensure your file is in CSV format.`,
         );
         // Reset the input value to allow re-upload
         document.getElementById("csv-file").value = "";
@@ -227,7 +227,7 @@ async function loadCsvFile(event) {
     });
   } catch (e) {
     showError(
-      `Error reading CSV file: ${e.message}. Please ensure your file is in CSV format.`
+      `Error reading CSV file: ${e.message}. Please ensure your file is in CSV format.`,
     );
     // Reset the input value to allow re-upload
     document.getElementById("csv-file").value = "";
@@ -267,19 +267,28 @@ function createCardFront(record, pdf, config, x, y) {
   pdf.setFontSize(14);
   pdf.setFont("helvetica", "bold");
   const topLines = pdf.splitTextToSize(record.top, CARD_SIZE - 4);
-  pdf.text(topLines, x + CARD_SIZE / 2, y + 10, {
+  // Calculate line height and adjust position to center multi-line text
+  const topLineHeight = pdf.getLineHeight() / pdf.internal.scaleFactor;
+  const topOffset = ((topLines.length - 1) * topLineHeight) / 2;
+  pdf.text(topLines, x + CARD_SIZE / 2, y + 14 - topOffset, {
     align: "center",
-    baseline: "top",
   });
 
   // Place the bottom text below the center
   if (String(record.bottom || "").trim()) {
     pdf.setFont("helvetica", "italic");
     const bottomLines = pdf.splitTextToSize(record.bottom, CARD_SIZE - 4);
-    pdf.text(bottomLines, x + CARD_SIZE / 2, y + CARD_SIZE - 10, {
-      align: "center",
-      baseline: "bottom",
-    });
+    // Calculate line height and adjust position to center multi-line text
+    const bottomLineHeight = pdf.getLineHeight() / pdf.internal.scaleFactor;
+    const bottomOffset = ((bottomLines.length - 1) * bottomLineHeight) / 2;
+    pdf.text(
+      bottomLines,
+      x + CARD_SIZE / 2,
+      y + CARD_SIZE - 10 - bottomOffset,
+      {
+        align: "center",
+      },
+    );
   }
 }
 
@@ -332,8 +341,12 @@ async function createPdfBytes(data, config) {
   pdf.setFont("helvetica");
 
   // Calculate the number of columns and rows that fit on the page
-  const nColumns = Math.floor((PAPER_WIDTH - 2 * CARD_MARGIN + GAP) / (CARD_SIZE + GAP));
-  const nRowsPerPage = Math.floor((PAPER_HEIGHT - 2 * CARD_MARGIN + GAP) / (CARD_SIZE + GAP));
+  const nColumns = Math.floor(
+    (PAPER_WIDTH - 2 * CARD_MARGIN + GAP) / (CARD_SIZE + GAP),
+  );
+  const nRowsPerPage = Math.floor(
+    (PAPER_HEIGHT - 2 * CARD_MARGIN + GAP) / (CARD_SIZE + GAP),
+  );
   const nRows = Math.ceil(data.length / nColumns);
 
   // Calculate the number of pages needed
@@ -372,7 +385,8 @@ async function createPdfBytes(data, config) {
         if (idx >= cardsOnPage.length) break;
 
         const record = cardsOnPage[idx];
-        const cardX = BLEED + CARD_MARGIN + (nColumns - 1 - i) * (CARD_SIZE + GAP);
+        const cardX =
+          BLEED + CARD_MARGIN + (nColumns - 1 - i) * (CARD_SIZE + GAP);
         const cardY = BLEED + CARD_MARGIN + j * (CARD_SIZE + GAP);
         await createCardBack(record, pdf, config, cardX, cardY);
       }
@@ -390,7 +404,9 @@ function collectConfig() {
 
   // Numeric configuration
   config.PAPER_WIDTH = parseFloat(document.getElementById("paper-width").value);
-  config.PAPER_HEIGHT = parseFloat(document.getElementById("paper-height").value);
+  config.PAPER_HEIGHT = parseFloat(
+    document.getElementById("paper-height").value,
+  );
   config.BLEED = parseFloat(document.getElementById("bleed").value);
   config.CARD_SIZE = parseFloat(document.getElementById("card-size").value);
   config.GAP = parseFloat(document.getElementById("gap").value);
@@ -407,7 +423,9 @@ function collectConfig() {
   // Dynamically collect colors for card types found in CSV
   if (csvData !== null) {
     const uniqueTypes = [
-      ...new Set(csvData.map((row) => row.type).filter((type) => type !== "back")),
+      ...new Set(
+        csvData.map((row) => row.type).filter((type) => type !== "back"),
+      ),
     ];
     uniqueTypes.forEach((cardType) => {
       const bgInput = document.getElementById(`${cardType}-bg`);
@@ -464,7 +482,7 @@ async function generatePDF(event) {
     pdf.save("cards.pdf");
 
     showSuccess(
-      "PDF generated successfully! Your download should start automatically."
+      "PDF generated successfully! Your download should start automatically.",
     );
 
     // Re-enable button
