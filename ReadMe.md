@@ -16,20 +16,20 @@ If anything is unclear, please feel free to [open an issue](https://github.com/W
 
 If you have a CSV file with the following content:
 
-| type    | url                                                                 | top                | bottom               | center |
-|---------|---------------------------------------------------------------------|--------------------|----------------------|--------|
-| song    | [{long url}](https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=f51ee06bce0e4a94) | Rick Astley        | Never Gonna Give You Up | 1987   |
-| song    | [{long url}](https://open.spotify.com/track/17xGX76BVzLRSbpYteAGR4?si=86f7c45002f74cd2) | Keane              | Bedshaped            | 2004   |
-| song    | [{long url}](https://open.spotify.com/track/5sT0sdrMmM4L4ZdBiv4Q2Z?si=78f89c69b69a4410) | Fox Stevenson      | Curtain Call         | 2025   |
-| song    | [{long url}](https://open.spotify.com/track/5HjBpej4uHPAX8sMeUFJms?si=8ef2aeff255f475b) | Stephen            | Crossfire            | 2015   |
-| song    | [{long url}](https://open.spotify.com/track/2gQK13gXYZRq2MgvPJyHx8?si=bbbd9f31922143da) | ODESZA             | The Last Goodbye     | 2022   |
-| video   | [{long url}](https://www.youtube.com/watch?v=xuCn8ux2gbs&pp=ygUjaGlzdG9yeSBvZiB0aGUgZW50aXJlIHdvcmxkIGkgZ3Vlc3PSBwkJhgkBhyohjO8%3D) | bill wurtz         | history of the entire world, i guess | 2017   |
-| video   | [{long url}](https://www.youtube.com/watch?v=2PF5AAEAWTs&pp=ygUkd291bGQgeW91IHJhdGhlciBub3Qga25vdyBoYW5rIGdyZWVu) | Hank Green         | Is it Better Not to Know? | 2021   |
-| article | [{long url}](https://www.google.com/)                                     | Some text          | Other text           | 2023   |
-| article | [{long url}](https://www.google.com/)                                     | Top                | Bottom               | 1523   |
-| article | [{long url}](https://www.google.com/)                                     | Text here          | Text there           | 1987   |
-| article | [{long url}](https://www.google.com/)                                     | To be              | Not to be            | OR     |
-| article | [{long url}](https://www.google.com/)                                     | Some text          | Other text           | 2023   |
+| type    | url                                                                                                                                 | top           | bottom                               | center |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------ | ------ |
+| song    | [{long url}](https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=f51ee06bce0e4a94)                                             | Rick Astley   | Never Gonna Give You Up              | 1987   |
+| song    | [{long url}](https://open.spotify.com/track/17xGX76BVzLRSbpYteAGR4?si=86f7c45002f74cd2)                                             | Keane         | Bedshaped                            | 2004   |
+| song    | [{long url}](https://open.spotify.com/track/5sT0sdrMmM4L4ZdBiv4Q2Z?si=78f89c69b69a4410)                                             | Fox Stevenson | Curtain Call                         | 2025   |
+| song    | [{long url}](https://open.spotify.com/track/5HjBpej4uHPAX8sMeUFJms?si=8ef2aeff255f475b)                                             | Stephen       | Crossfire                            | 2015   |
+| song    | [{long url}](https://open.spotify.com/track/2gQK13gXYZRq2MgvPJyHx8?si=bbbd9f31922143da)                                             | ODESZA        | The Last Goodbye                     | 2022   |
+| video   | [{long url}](https://www.youtube.com/watch?v=xuCn8ux2gbs&pp=ygUjaGlzdG9yeSBvZiB0aGUgZW50aXJlIHdvcmxkIGkgZ3Vlc3PSBwkJhgkBhyohjO8%3D) | bill wurtz    | history of the entire world, i guess | 2017   |
+| video   | [{long url}](https://www.youtube.com/watch?v=2PF5AAEAWTs&pp=ygUkd291bGQgeW91IHJhdGhlciBub3Qga25vdyBoYW5rIGdyZWVu)                   | Hank Green    | Is it Better Not to Know?            | 2021   |
+| article | [{long url}](https://www.google.com/)                                                                                               | Some text     | Other text                           | 2023   |
+| article | [{long url}](https://www.google.com/)                                                                                               | Top           | Bottom                               | 1523   |
+| article | [{long url}](https://www.google.com/)                                                                                               | Text here     | Text there                           | 1987   |
+| article | [{long url}](https://www.google.com/)                                                                                               | To be         | Not to be                            | OR     |
+| article | [{long url}](https://www.google.com/)                                                                                               | Some text     | Other text                           | 2023   |
 
 It will generate a PDF with cards like the following:
 
@@ -43,6 +43,29 @@ Note that the QR code on the top right corner of the page on the right correspon
 ## Getting Started
 
 Visit the [https://wesselvandam.github.io/hitster-card-generator](webpage version) if you just want to upload your CSV and get the PDF.
+
+### Tailwind CSS v4 (CLI)
+
+The website uses Tailwind CSS v4 built with the Tailwind CLI. Configuration is done via CSS directives in `src/input.css` (not JavaScript). The compiled CSS is committed to `assets/tailwind.css` so GitHub Pages can serve it.
+
+1. Install the CLI dependencies:
+   ```bash
+   npm install
+   ```
+2. Build the CSS once:
+   ```bash
+   npm run build:css
+   ```
+3. Or run in watch mode while editing:
+   ```bash
+   npm run watch:css
+   ```
+
+The Tailwind configuration uses CSS directives in `src/input.css`:
+
+- `@theme` — Custom design tokens (colors, fonts, border radius)
+- `@source` — Content file detection
+- `@plugin` — Tailwind plugins (@tailwindcss/forms, @tailwindcss/typography)
 
 Otherwise, you can use the Python version located in the `src` directory. If you are not familiar with Python or Git, you might want to check out [this Google Colab notebook](https://colab.research.google.com/drive/1wJosGkdxvzGYWLykdSODbbToHJt-_Z4P?usp=sharing) that provides a step-by-step guide to generating your own cards and tokens. The notebook includes instructions on how to upload your CSV file and run the code without needing to install anything on your local machine.
 
@@ -80,7 +103,6 @@ To use this project, you need:
 ### Usage
 
 1. **Prepare Your Data**
-
    - Place your data in a CSV file inside the `data` folder.
    - The CSV file should follow the format of the provided example file `data/data.csv`:
      ```csv
@@ -92,17 +114,15 @@ To use this project, you need:
      ```
    - The `type` column determines the type of card (e.g., `song`, `video`, `article`, `painting`).
    - The `url` column contains the URL for the QR code. This can be any valid URL, such as a Spotify link, YouTube link, or a webpage link. For example, I used Google Drive links to images that I had uploaded to my Google Drive. Please ensure that the links are publicly accessible and long-lived, so that your cards will work for a long time.
-    - The `top`, `bottom`, and `center` columns contain the text that will be displayed on the front side of the card. The `top` and `bottom` columns are used for the top and bottom text, while the `center` column is used for the center text (typically a year). You can use any text you like, but make sure to keep it short enough to fit on the card.
+   - The `top`, `bottom`, and `center` columns contain the text that will be displayed on the front side of the card. The `top` and `bottom` columns are used for the top and bottom text, while the `center` column is used for the center text (typically a year). You can use any text you like, but make sure to keep it short enough to fit on the card.
 
 2. **Customize Configuration**
-
    - Open the `src/config.py` file to adjust settings such as:
      - Page and card sizes.
      - Colors for the front and back sides of the cards. The front side can be customized based on the type of card. Colors are given in RGB format (0-255).
    - Note: Not all sizes are possible to ensure proper alignment for double-sided printing.
 
 3. **Generate the PDF**
-
    - Run the script to create the PDF:
      ```bash
      python src/pdf.py

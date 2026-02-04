@@ -11,99 +11,11 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#0d9488",
-              "primary-hover": "#0f766e",
-              "background-light": "#f1f5f9",
-              "background-dark": "#0f172a",
-              "surface-light": "#ffffff",
-              "surface-dark": "#1e293b",
-            },
-            fontFamily: {
-              display: ["Inter", "sans-serif"],
-              body: ["Inter", "sans-serif"],
-            },
-            borderRadius: {
-              DEFAULT: "0.75rem",
-            },
-          },
-        },
-      };
-    </script>
+    <link href="assets/tailwind.css" rel="stylesheet" />
     <!-- JavaScript libraries for CSV parsing, PDF generation, and QR codes -->
-    <script 
-      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script 
-      src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <script 
-      src="https://unpkg.com/papaparse@5.5.3/papaparse.min.js"></script>
-    <style>
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-      }
-      .dark ::-webkit-scrollbar-thumb {
-        background: #475569;
-      }
-      .fade-in {
-        animation: fadeIn 0.5s ease-in;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.3s ease-out;
-      }
-      .animate-fade-out {
-        animation: fadeOut 0.3s ease-out;
-      }
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        to {
-          opacity: 0;
-          transform: translateX(10px);
-        }
-      }
-      input[type="color"] {
-        appearance: none;
-        -webkit-appearance: none;
-        border: none;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        overflow: hidden;
-        padding: 0;
-        cursor: pointer;
-      }
-      input[type="color"]::-webkit-color-swatch-wrapper {
-        padding: 0;
-      }
-      input[type="color"]::-webkit-color-swatch {
-        border: none;
-      }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://unpkg.com/papaparse@5.5.3/papaparse.min.js"></script>
   </head>
   <body
     class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-body transition-colors duration-300">
@@ -195,7 +107,14 @@
             that you want to turn into cards. While some websites allow you to
             link to a Spotify playlist, those may not get the song metadata
             correctly. Using a CSV, you have full control over the data and can
-            customize it as needed. Feel free to check out our <a href="assets/data.csv" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-hover">example CSV file</a>.</p
+            customize it as needed. Feel free to check out our
+            <a
+              href="assets/data.csv"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-primary hover:text-primary-hover"
+              >example CSV file</a
+            >.</p
           >
           <p class="font-medium my-2">Required Columns:</p>
           <ul
@@ -213,7 +132,8 @@
                 class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-xs"
                 >url</code
               >: Valid URL for QR code. For example, a Spotify link or a link to
-              an image. Make sure the link is publicly accessible, and that the link text does not spoil any answers!</li
+              an image. Make sure the link is publicly accessible, and that the
+              link text does not spoil any answers!</li
             >
             <li
               ><code
@@ -842,14 +762,14 @@
         let bgColor, textColor, borderColor, icon;
         switch (type) {
           case "error":
-            bgColor = "bg-red-50 dark:bg-red-900/20";
+            bgColor = "bg-red-50 dark:bg-red-900";
             textColor = "text-red-800 dark:text-red-300";
             borderColor = "border-red-200 dark:border-red-800";
             icon =
               '<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>';
             break;
           case "success":
-            bgColor = "bg-green-50 dark:bg-green-900/20";
+            bgColor = "bg-green-50 dark:bg-green-900";
             textColor = "text-green-800 dark:text-green-300";
             borderColor = "border-green-200 dark:border-green-800";
             icon =

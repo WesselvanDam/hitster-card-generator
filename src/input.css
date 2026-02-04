@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --color-primary: #0d9488;
+  --color-primary-hover: #0f766e;
+  --color-background-light: #f1f5f9;
+  --color-background-dark: #0f172a;
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1e293b;
+  --radius-default: 0.75rem;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source "../index.html";
+@source "../web_pdf_generator.js";
+
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+.animate-fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+input[type="color"] {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "hitster-card-generator",
+  "private": true,
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.13",
+    "tailwindcss": "^4.1.0"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css --watch"
+  }
+}
