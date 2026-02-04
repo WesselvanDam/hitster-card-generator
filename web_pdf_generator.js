@@ -267,16 +267,18 @@ function createCardFront(record, pdf, config, x, y) {
   pdf.setFontSize(14);
   pdf.setFont("helvetica", "bold");
   const topLines = pdf.splitTextToSize(record.top, CARD_SIZE - 4);
-  pdf.text(topLines, x + CARD_SIZE / 2, y + 6, {
+  pdf.text(topLines, x + CARD_SIZE / 2, y + 10, {
     align: "center",
+    baseline: "top",
   });
 
   // Place the bottom text below the center
   if (String(record.bottom || "").trim()) {
     pdf.setFont("helvetica", "italic");
     const bottomLines = pdf.splitTextToSize(record.bottom, CARD_SIZE - 4);
-    pdf.text(bottomLines, x + CARD_SIZE / 2, y + CARD_SIZE - 14, {
+    pdf.text(bottomLines, x + CARD_SIZE / 2, y + CARD_SIZE - 10, {
       align: "center",
+      baseline: "bottom",
     });
   }
 }
@@ -305,7 +307,7 @@ async function createCardBack(record, pdf, config, x, y) {
 
   // Add QR code to PDF
   const qrDataUrl = qr.toDataURL();
-  pdf.addImage(qrDataUrl, "PNG", x + 1, y + 1, CARD_SIZE - 2, CARD_SIZE - 2);
+  pdf.addImage(qrDataUrl, "PNG", x + 8, y + 8, CARD_SIZE - 16, CARD_SIZE - 16);
 }
 
 /**
