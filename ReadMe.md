@@ -2,7 +2,7 @@
 
 This project allows you to create printable cards and tokens for a game similar to the music guessing game **Hitster**. The generated PDF contains double-sided cards that can be printed, cut out, and used for gameplay.
 
-If anything is unclear, please feel free to [open an issue](https://github.com/WesselvanDam/hitster-card-generator/issues) or [contact me](mailto:wessel@wesselvandam.nl) directly. I will do my best to help you out!
+If anything is unclear, please feel free to [open an issue](https://github.com/WesselvanDam/hitster-card-generator/issues) or [contact me](mailto:wessel@wesselvandam.com) directly. I will do my best to help you out!
 
 ## Features
 
