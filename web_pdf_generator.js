@@ -1,13 +1,31 @@
 // Global variables to store configuration
 let csvData = null;
 
-// Default colors for common card categories
-const DEFAULT_COLORS = {
-  song: { bg: "#8cbeb2", text: "#192623" },
-  video: { bg: "#f3b562", text: "#33230e" },
-  article: { bg: "#f06060", text: "#320e0e" },
-  painting: { bg: "#f2ebbf", text: "#333126" },
-};
+// Palette for card categories (400 as background, 950 as text)
+const COLOR_PALETTE = [
+  { bg: "#FF6466", text: "#480808" },
+  { bg: "#FF8805", text: "#451305" },
+  { bg: "#FFB800", text: "#481901" },
+  { bg: "#FFC600", text: "#451F05" },
+  { bg: "#A7E400", text: "#1D2E04" },
+  { bg: "#31DE74", text: "#062E16" },
+  { bg: "#00D393", text: "#002C22" },
+  { bg: "#00D4BE", text: "#002F2E" },
+  { bg: "#00D3F2", text: "#003345" },
+  { bg: "#00BDFF", text: "#002F4A" },
+  { bg: "#00A4FF", text: "#002655" },
+  { bg: "#608AFF", text: "#131C4C" },
+  { bg: "#9687FF", text: "#201267" },
+  { bg: "#B57EFF", text: "#330A66" },
+  { bg: "#E570FF", text: "#48054F" },
+  { bg: "#FB67B5", text: "#520523" },
+  { bg: "#FF647D", text: "#4E0318" },
+  { bg: "#8CA1B9", text: "#000617" },
+];
+
+function getPaletteColor(index) {
+  return COLOR_PALETTE[index % COLOR_PALETTE.length];
+}
 
 /**
  * Convert hex color to RGB object
@@ -39,7 +57,12 @@ function showSuccess(message) {
  * Display a status message to the user
  */
 function showStatus(message) {
+  console.log(message);
   window.showAlert(message, "status");
+}
+
+function yieldToBrowser() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 /**
@@ -56,12 +79,8 @@ function generateCardTypeColors(cardTypes) {
   }
 
   // Generate color picker for each card type
-  cardTypes.sort().forEach((cardType) => {
-    // Get default colors or generate random ones
-    const defaultColors = DEFAULT_COLORS[cardType] || {
-      bg: "#cccccc",
-      text: "#000000",
-    };
+  cardTypes.sort().forEach((cardType, index) => {
+    const defaultColors = getPaletteColor(index);
 
     // Create the HTML structure for background color
     const bgDiv = document.createElement("div");
@@ -74,7 +93,7 @@ function generateCardTypeColors(cardTypes) {
     const bgInput = document.createElement("input");
     bgInput.type = "color";
     bgInput.className =
-      "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full";
+      "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full w-10 h-10 shrink-0";
     bgInput.id = `${cardType}-bg`;
     bgInput.value = defaultColors.bg;
     bgDiv.appendChild(bgInput);
@@ -92,7 +111,7 @@ function generateCardTypeColors(cardTypes) {
     const textInput = document.createElement("input");
     textInput.type = "color";
     textInput.className =
-      "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full";
+      "ring-2 ring-slate-200 dark:ring-slate-600 rounded-full w-10 h-10 shrink-0";
     textInput.id = `${cardType}-text`;
     textInput.value = defaultColors.text;
     textDiv.appendChild(textInput);
@@ -150,26 +169,6 @@ function validateCsvData(data) {
   }
 
   return { valid: true, message: "CSV data is valid" };
-}
-
-/**
- * Validate that the configuration is valid
- */
-function validateConfig(config) {
-  // Check if all values are positive
-  for (const [key, value] of Object.entries(config)) {
-    if (key.startsWith("CARD_COLORS")) {
-      continue;
-    }
-    if (value < 0) {
-      return {
-        valid: false,
-        message: `Configuration value '${key}' must be positive`,
-      };
-    }
-  }
-
-  return { valid: true, message: "Configuration is valid" };
 }
 
 /**
@@ -276,10 +275,19 @@ function createCardFront(record, pdf, config, x, y) {
 
   // Place the center in the center of the card
   if (String(record.center || "").trim()) {
-    pdf.setFontSize(48);
-    pdf.setFont("helvetica", "bold");
     const centerText = String(record.center);
-    const textWidth = pdf.getTextWidth(centerText);
+    const maxWidth = CARD_SIZE - 8; // keep small side padding
+    const baseSize = 48;
+    const minSize = 14;
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(baseSize);
+
+    const baseWidth = pdf.getTextWidth(centerText);
+    const scale = Math.min(1, maxWidth / baseWidth);
+    const finalSize = Math.max(minSize, Math.floor(baseSize * scale));
+
+    pdf.setFontSize(finalSize);
     pdf.text(centerText, x + CARD_SIZE / 2, y + CARD_SIZE / 2, {
       align: "center",
       baseline: "middle",
@@ -333,13 +341,13 @@ async function createCardBack(record, pdf, config, x, y) {
     value: record.url,
     size: 500, // High resolution for quality
     foreground: `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`,
-    background: "rgba(0, 0, 0, 0)", // Transparent background
+    background: `rgb(${bgColor.r}, ${bgColor.g}, ${bgColor.b})`,
     level: "L",
   });
 
   // Add QR code to PDF
-  const qrDataUrl = qr.toDataURL();
-  pdf.addImage(qrDataUrl, "PNG", x + 8, y + 8, CARD_SIZE - 16, CARD_SIZE - 16);
+  const qrDataUrl = qr.toDataURL("image/jpeg", 0.85);
+  pdf.addImage(qrDataUrl, "JPEG", x + 8, y + 8, CARD_SIZE - 16, CARD_SIZE - 16);
 }
 
 /**
@@ -484,20 +492,14 @@ async function generatePDF(event) {
     return;
   }
 
-  // Validate configuration
-  const validation = validateConfig(config);
-  if (!validation.valid) {
-    showError(validation.message);
-    return;
-  }
-
   // Generate PDF
   try {
-    showStatus("Generating PDF... This may take a moment.");
-
     // Disable button during generation
     const btn = document.getElementById("generate-btn");
     btn.disabled = true;
+
+    showStatus("Generating PDF... This may take a moment.");
+    await yieldToBrowser();
 
     const pdf = await createPdfBytes(csvData, config);
 

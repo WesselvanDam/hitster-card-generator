@@ -315,7 +315,7 @@
                     >Background Color</label
                   >
                   <input
-                    class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
+                    class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full w-10 h-10 shrink-0"
                     type="color"
                     id="back-bg"
                     value="#acc8e5" />
@@ -327,7 +327,7 @@
                     >QR Color</label
                   >
                   <input
-                    class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full"
+                    class="ring-2 ring-slate-200 dark:ring-slate-600 rounded-full w-10 h-10 shrink-0"
                     type="color"
                     id="back-text"
                     value="#112a46" />
@@ -383,68 +383,48 @@
             class="px-6 md:px-8 pb-8 pt-0 border-t border-slate-100 dark:border-slate-700/50">
             <!-- Explanation Section -->
             <div
-              class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              class="mt-6 p-4 bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-lg">
               <h3
-                class="font-semibold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
-                <i class="ph ph-info"></i>
-                Configuration Guidelines
-              </h3>
-              <ul class="text-sm text-blue-800 dark:text-blue-300 space-y-1.5">
-                <li
-                  ><strong>Paper Width/Height:</strong> Standard A4 is
-                  210×297mm.</li
-                >
-                <li
-                  ><strong>Bleed:</strong> Extra space around the page edge for
-                  printing (typically 3mm). This is usually necessary if you're
-                  printing the PDF at a professional print shop. Set it to zero
-                  if you're printing at home.</li
-                >
-                <li
-                  ><strong>Card Size:</strong> The size of each square card on
-                  the page. 66 mm is about the same size as the original Hitster
-                  cards.</li
-                >
-                <li
-                  ><strong>Card Gap:</strong> Space between cards for
-                  cutting.</li
-                >
-                <li
-                  ><strong>Card Margin:</strong> Space from the page edge to the
-                  first card.</li
-                >
-              </ul>
-              <h3
-                class="font-semibold text-blue-900 dark:text-blue-300 mb-2 mt-4 flex items-center gap-2">
+                class="font-semibold text-teal-900 dark:text-teal-300 mb-2 flex items-center gap-2">
                 <i class="ph ph-sliders"></i>
-                Constraints
+                Configuration Constraints
               </h3>
               <p
-                class="text-sm text-blue-800 dark:text-blue-300 mt-3 font-medium">
+                class="text-sm text-teal-800 dark:text-teal-300 mt-3 font-medium">
                 To be able to align both sides of the card for double-sided
                 printing, there are specific constraints: The paper width minus
-                twice the card margin
+                twice the content margin
                 <strong>must be exactly equal to</strong> N times the card size
-                <em>plus</em> N minus 1 times the card gap.
-                <br />
-                With the default values, this means:
-                <br />
+                <em>plus</em> N minus 1 times the card gap. With the default
+                values, this means: <br /><br />
                 <em>(210mm - 2×3mm) = 3 × 66mm + 2 × 3mm</em>
-                <br />
+                <br /><br />
                 You probably want to stick to the default values, but changing
                 them might be necessary if you want differently sized cards or
                 are using non-standard paper sizes.
+                <br /><br />
+                If you do not want gaps between the cards, set the card gap to
+                zero and the content margin to 6mm (if using the default card
+                size of 66mm and paper width of 210mm).
               </p>
             </div>
 
             <div
-              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 **:[button]:h-5 **:[button]:w-5 **:[button]:rounded-full **:[button]:bg-teal-100 **:[button]:text-teal-800 **:[button]:dark:bg-teal-900/30 **:[button]:dark:text-teal-300 **:[button]:flex **:[button]:items-center **:[button]:justify-center **:[button]:text-lg **:[button]:hover:bg-teal-200 **:[button]:dark:hover:bg-teal-900/50 [&_div[role='tooltip']]:absolute [&_div[role='tooltip']]:left-1/2 [&_div[role='tooltip']]:top-full [&_div[role='tooltip']]:z-10 [&_div[role='tooltip']]:mt-2 [&_div[role='tooltip']]:w-56 [&_div[role='tooltip']]:-translate-x-1/2 [&_div[role='tooltip']]:rounded-lg [&_div[role='tooltip']]:bg-slate-900 [&_div[role='tooltip']]:px-3 [&_div[role='tooltip']]:py-2 [&_div[role='tooltip']]:text-xs [&_div[role='tooltip']]:text-white [&_div[role='tooltip']]:opacity-0 [&_div[role='tooltip']]:transition-opacity [&_div[role='tooltip']]:duration-200 [&_div[role='tooltip']]:group-hover/info:opacity-100 [&_div[role='tooltip']]:pointer-events-none [&_div[role='tooltip']]:group-hover/info:pointer-events-auto">
               <div class="space-y-1">
-                <label
-                  for="paper-width"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Paper Width (mm)</label
-                >
+                <div class="flex items-center gap-2">
+                  <label
+                    for="paper-width"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >Paper Width (mm)</label
+                  >
+                  <div class="relative group/info">
+                    <button type="button" aria-label="Paper width info">
+                      <i class="ph ph-info"></i>
+                    </button>
+                    <div role="tooltip"> Standard A4 is 210x297mm. </div>
+                  </div>
+                </div>
                 <div class="relative rounded-md shadow-sm">
                   <input
                     class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
@@ -457,11 +437,19 @@
                 </div>
               </div>
               <div class="space-y-1">
-                <label
-                  for="paper-height"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Paper Height (mm)</label
-                >
+                <div class="flex items-center gap-2">
+                  <label
+                    for="paper-height"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >Paper Height (mm)</label
+                  >
+                  <div class="relative group/info">
+                    <button type="button" aria-label="Paper height info">
+                      <i class="ph ph-info"></i>
+                    </button>
+                    <div role="tooltip"> Standard A4 is 210x297mm. </div>
+                  </div>
+                </div>
                 <div class="relative rounded-md shadow-sm">
                   <input
                     class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
@@ -474,11 +462,22 @@
                 </div>
               </div>
               <div class="space-y-1">
-                <label
-                  for="bleed"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Bleed (mm)</label
-                >
+                <div class="flex items-center gap-2">
+                  <label
+                    for="bleed"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >Bleed (mm)</label
+                  >
+                  <div class="relative group/info">
+                    <button type="button" aria-label="Bleed info">
+                      <i class="ph ph-info"></i>
+                    </button>
+                    <div role="tooltip">
+                      Extra space around the page edge for printing (typically
+                      3mm). Set to 0 for home printing.
+                    </div>
+                  </div>
+                </div>
                 <div class="relative rounded-md shadow-sm">
                   <input
                     class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
@@ -491,11 +490,21 @@
                 </div>
               </div>
               <div class="space-y-1">
-                <label
-                  for="card-size"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Card Size (mm)</label
-                >
+                <div class="flex items-center gap-2">
+                  <label
+                    for="card-size"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >Card Size (mm)</label
+                  >
+                  <div class="relative group/info">
+                    <button type="button" aria-label="Card size info">
+                      <i class="ph ph-info"></i>
+                    </button>
+                    <div role="tooltip">
+                      66mm is about the same size as the original Hitster cards.
+                    </div>
+                  </div>
+                </div>
                 <div class="relative rounded-md shadow-sm">
                   <input
                     class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
@@ -508,35 +517,53 @@
                 </div>
               </div>
               <div class="space-y-1">
-                <label
-                  for="gap"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Card Gap (mm)</label
-                >
+                <div class="flex items-center gap-2">
+                  <label
+                    for="gap"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >Card Gap (mm)</label
+                  >
+                  <div class="relative group/info">
+                    <button type="button" aria-label="Card gap info">
+                      <i class="ph ph-info"></i>
+                    </button>
+                    <div role="tooltip"> Space between cards for cutting. </div>
+                  </div>
+                </div>
                 <div class="relative rounded-md shadow-sm">
                   <input
                     class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
                     id="gap"
                     type="number"
                     value="3"
-                    min="0.1"
+                    min="0"
                     step="0.1"
                     oninput="validateConfig()" />
                 </div>
               </div>
               <div class="space-y-1">
-                <label
-                  for="card-margin"
-                  class="block text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >Card Margin (mm)</label
-                >
+                <div class="flex items-center gap-2">
+                  <label
+                    for="card-margin"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >Content Margin (mm)</label
+                  >
+                  <div class="relative group/info">
+                    <button type="button" aria-label="Card margin info">
+                      <i class="ph ph-info"></i>
+                    </button>
+                    <div role="tooltip">
+                      Space between the page edges and the card edges.
+                    </div>
+                  </div>
+                </div>
                 <div class="relative rounded-md shadow-sm">
                   <input
                     class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-md"
                     id="card-margin"
                     type="number"
                     value="3"
-                    min="0.1"
+                    min="0"
                     step="0.1"
                     oninput="validateConfig()" />
                 </div>
@@ -614,7 +641,7 @@
         <div
           class="flex items-start gap-5 p-6 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm">
           <div
-            class="flex-shrink-0 w-12 h-12 rounded-full bg-sky-50 dark:bg-sky-900/20 text-sky-500 flex items-center justify-center">
+            class="shrink-0 w-12 h-12 rounded-full bg-sky-50 dark:bg-sky-900/20 text-sky-500 flex items-center justify-center">
             <i class="ph ph-question text-3xl"></i>
           </div>
           <div class="space-y-1">
@@ -859,6 +886,7 @@
 
       // JavaScript validation function for configuration
       function validateConfig() {
+        console.log("Validating configuration...");
         const paperWidth = parseFloat(
           document.getElementById("paper-width").value,
         );
@@ -894,8 +922,9 @@
 
         // Check card configuration - must fit perfectly
         const cardFitCheck =
-          (paperWidth - 2 * cardMargin + gap) % (cardSize + gap);
-        if (Math.abs(cardFitCheck) > 0.001) {
+          (paperWidth - 2 * cardMargin + gap + 0.001) % (cardSize + gap);
+        console.log(`cardFitCheck: ${cardFitCheck} (should be close to 0)`);
+        if (Math.abs(cardFitCheck) > 0.002) {
           // Allow for floating point errors
           const numCards = Math.floor(
             (paperWidth - 2 * cardMargin + gap) / (cardSize + gap),
