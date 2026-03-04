@@ -886,7 +886,6 @@
 
       // JavaScript validation function for configuration
       function validateConfig() {
-        console.log("Validating configuration...");
         const paperWidth = parseFloat(
           document.getElementById("paper-width").value,
         );
@@ -923,7 +922,6 @@
         // Check card configuration - must fit perfectly
         const cardFitCheck =
           (paperWidth - 2 * cardMargin + gap + 0.001) % (cardSize + gap);
-        console.log(`cardFitCheck: ${cardFitCheck} (should be close to 0)`);
         if (Math.abs(cardFitCheck) > 0.002) {
           // Allow for floating point errors
           const numCards = Math.floor(
@@ -970,6 +968,9 @@
       src="//gc.zgo.at/count.js"></script>
 
     <!-- JavaScript PDF generator -->
+    <script src="./font-normal.js"></script>
+    <script src="./font-bold.js"></script>
+    <script src="./font-italic.js"></script>
     <script src="./web_pdf_generator.js"></script>
   </body>
 </html>

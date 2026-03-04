@@ -209,6 +209,7 @@ async function loadCsvFile(event) {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      encoding: "UTF-8",
       complete: function (results) {
         // Filter out completely empty rows
         csvData = results.data.filter((row) =>
@@ -280,7 +281,7 @@ function createCardFront(record, pdf, config, x, y) {
     const baseSize = 48;
     const minSize = 14;
 
-    pdf.setFont("helvetica", "bold");
+    pdf.setFont("customFont", "bold");
     pdf.setFontSize(baseSize);
 
     const baseWidth = pdf.getTextWidth(centerText);
@@ -296,7 +297,7 @@ function createCardFront(record, pdf, config, x, y) {
 
   // Place the top text above the center
   pdf.setFontSize(14);
-  pdf.setFont("helvetica", "bold");
+  pdf.setFont("customFont", "bold");
   const topLines = pdf.splitTextToSize(record.top, CARD_SIZE - 4);
   // Calculate line height and adjust position to center multi-line text
   const topLineHeight = pdf.getLineHeight() / pdf.internal.scaleFactor;
@@ -307,7 +308,7 @@ function createCardFront(record, pdf, config, x, y) {
 
   // Place the bottom text below the center
   if (String(record.bottom || "").trim()) {
-    pdf.setFont("helvetica", "italic");
+    pdf.setFont("customFont", "italic");
     const bottomLines = pdf.splitTextToSize(record.bottom, CARD_SIZE - 4);
     // Calculate line height and adjust position to center multi-line text
     const bottomLineHeight = pdf.getLineHeight() / pdf.internal.scaleFactor;
@@ -369,7 +370,14 @@ async function createPdfBytes(data, config) {
     format: [PAPER_WIDTH + 2 * BLEED, PAPER_HEIGHT + 2 * BLEED],
   });
 
-  pdf.setFont("helvetica");
+  pdf.addFileToVFS("customFont.ttf", window.fontNormal);
+  pdf.addFont("customFont.ttf", "customFont", "normal");
+  pdf.addFileToVFS("customFont.ttf", window.fontBold);
+  pdf.addFont("customFont.ttf", "customFont", "bold");
+  pdf.addFileToVFS("customFont.ttf", window.fontItalic);
+  pdf.addFont("customFont.ttf", "customFont", "italic");
+
+  pdf.setFont("customFont", "normal");
 
   // Calculate the number of columns and rows that fit on the page
   const nColumns = Math.floor(
